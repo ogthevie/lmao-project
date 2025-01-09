@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 37b5f7a795970f141a5d10295cf1f080
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Kids Draw
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 80a9e96524c8e414c86e61aa3afd823b, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
