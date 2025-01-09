@@ -5,6 +5,7 @@ public class SkillManager : MonoBehaviour
 {
     public Slider skillThunderSlider;
     public GameObject flyingThunder;
+    public Image spark;
     [SerializeField] ParticleSystem flyThunderFx;
     [SerializeField] GameManager gameManager;
     [SerializeField] MaskManager maskManager;
@@ -21,6 +22,8 @@ public class SkillManager : MonoBehaviour
         maxTime = skillThunderSlider.maxValue = 15f; //Discutable
         currentTime = skillThunderSlider.value = 0f; //discutable
         flyingThunder.SetActive(false);
+        spark.enabled = false;
+        spark.enabled = false;
     }
 
     private void Update() 
@@ -43,6 +46,7 @@ public class SkillManager : MonoBehaviour
         else if(currentTime >= maxTime )
         {
             flyingThunder.SetActive(true);
+            spark.enabled = true;
             xPos = Random.Range(-3.49f, 3.49f);
             zPos = Random.Range(-3.49f, 3.49f);
         }
@@ -57,6 +61,7 @@ public class SkillManager : MonoBehaviour
         maxTime += 10f;
         skillThunderSlider.maxValue = maxTime;
         flyingThunder.SetActive(false);
+        spark.enabled = false;
 
     }
 }

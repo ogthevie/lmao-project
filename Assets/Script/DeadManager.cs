@@ -51,6 +51,7 @@ public class DeadManager : MonoBehaviour
             skillManager.currentTime = 0f;
             skillManager.skillThunderSlider.maxValue = skillManager.maxTime = 15f;
             skillManager.flyingThunder.SetActive(false);
+            skillManager.spark.enabled = false;
             Time.timeScale = 1;
             GameObject mask = maskManager.transform.GetChild(0).gameObject;
             mask.SetActive(true);
