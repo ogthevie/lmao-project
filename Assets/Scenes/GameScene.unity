@@ -1548,7 +1548,7 @@ GameObject:
   - component: {fileID: 687139049}
   - component: {fileID: 687139048}
   m_Layer: 5
-  m_Name: sparkbutton
+  m_Name: spark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2635,6 +2635,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 901481051}
     m_Modifications:
+    - target: {fileID: 472117783600084996, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -120
+      objectReference: {fileID: 0}
     - target: {fileID: 647793999277729898, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2731,6 +2735,23 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 98020596}
+    - target: {fileID: 7637763101375924189, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+      propertyPath: m_text
+      value: "Glisser votre doigt \xE0 gauche ou \xE0 droite en fonction de vos pr\xE9f\xE9rences
+        de d\xE9placement"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637763101375924189, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+      propertyPath: m_fontSize
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637763101375924189, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637763101375924189, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 9049938628308401438, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3934,7 +3955,7 @@ GameObject:
   - component: {fileID: 1376650363}
   - component: {fileID: 1376650362}
   m_Layer: 5
-  m_Name: sparkbutton
+  m_Name: spark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4359,7 +4380,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillThunderSlider: {fileID: 0}
-  flyingThunder: {fileID: 687139046}
+  flyingThunder: {fileID: 2046544274}
+  spark: {fileID: 687139048}
   flyThunderFx: {fileID: 1136427934}
   gameManager: {fileID: 0}
   maskManager: {fileID: 0}
@@ -6392,7 +6414,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillThunderSlider: {fileID: 0}
-  flyingThunder: {fileID: 1376650359}
+  flyingThunder: {fileID: 1321858917}
+  spark: {fileID: 1376650362}
   flyThunderFx: {fileID: 1136427934}
   gameManager: {fileID: 0}
   maskManager: {fileID: 0}
