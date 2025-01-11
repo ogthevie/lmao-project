@@ -1,5 +1,5 @@
 *.csproj
-PLG.sln
+*.sln
 obj/
 Logs/
 Library/
