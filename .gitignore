@@ -15,7 +15,7 @@
 
 # Plugins
 /[Aa]ssets/Plugins
-/[Aa]ssets/Firebase/
+/Assets/Firebase/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
