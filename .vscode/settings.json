@@ -52,5 +52,5 @@
         "Temp/": true
     },
     "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "lmao-project.sln"
+    "dotnet.defaultSolution": "PLG.sln"
 }
