@@ -6,21 +6,36 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    #region variables
     MaskManager maskManager;
     public AudioSource gameAudioSource;
-    public TextMeshProUGUI chronoVisual, primeScoreVisual, tentativeNb;
+
+    // Références aux éléments UI pour afficher le chronomètre et le score
+    public TextMeshProUGUI chronoVisual, primeScoreVisual;
+
+    // Timer pour suivre le temps écoulé
     public float timer;
+
+    // Références aux différents éléments UI
     public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl;
+
+    // Tableau des clips audio utilisés dans le jeu
     public AudioClip [] audioClips = new AudioClip[3];
+
+    // Variables pour le score et le score prime
     public int score, primeScore;
+
+    // Indicateur pour savoir si le jeu peut être joué
     public bool canPlay;
+
+    #endregion
 
     void Awake()
     {
         gameAudioSource = GetComponent<AudioSource>();
         maskManager = FindFirstObjectByType<MaskManager>();
         //ClearAllSaves();
-        LoadTentative();
+        LoadGame();
     }
 
     void Start()
@@ -37,6 +52,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log(timer);
     }
 
+    // Gère le chronomètre du jeu
     void HandleTimer(float delta)
     {
         if(maskManager.canCount)
@@ -48,6 +64,9 @@ public class GameManager : MonoBehaviour
 
         }
     }
+
+
+    #region choix de la main préférentiel pour jouer
 
     public void HandLeftGame()
     {
@@ -66,6 +85,8 @@ public class GameManager : MonoBehaviour
         Destroy(leftControl);
         StartCoroutine(HandleTransition());
     }
+
+    #endregion
 
     public void HandleLetsPlay()
     {
@@ -94,7 +115,9 @@ public class GameManager : MonoBehaviour
         gameAudioSource.loop = true;
     }
 
-    public void SaveTentative()
+    #region Gestion des sauvegardes
+
+    public void SaveGame()
     {
         GameData gameData = new GameData
         {
@@ -107,7 +130,8 @@ public class GameManager : MonoBehaviour
         Debug.Log(gameData.scoreData);
     }
 
-    public void LoadTentative()
+    // Charge le jeu depuis les sauvegardes
+    public void LoadGame()
     {
         string filePath = Application.persistentDataPath + "/tentativeData.json";
         if(System.IO.File.Exists(filePath))
@@ -121,6 +145,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // Efface toutes les sauvegardes
     public void ClearAllSaves()
     {
         // Chemin du dossier de sauvegarde
@@ -151,4 +176,6 @@ public class GameManager : MonoBehaviour
     {
         public int scoreData;
     }
+
+    #endregion
 }

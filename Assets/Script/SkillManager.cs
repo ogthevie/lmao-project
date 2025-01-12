@@ -3,13 +3,24 @@ using UnityEngine.UI;
 
 public class SkillManager : MonoBehaviour
 {
+    #region  variables
+
+    // Référence au Slider pour la compétence Thunder
     public Slider skillThunderSlider;
+
+    // Référence au GameObject button représentant le Thunder volant
     public GameObject flyingThunder;
     public Image spark;
+
+    // Référence au système de particules pour l'effet visuel du Thunder volant
     [SerializeField] ParticleSystem flyThunderFx;
     [SerializeField] GameManager gameManager;
     [SerializeField] MaskManager maskManager;
+
+    // Variables pour gérer le temps de recharge de la compétence et les coordonnées du tonnerre volant
     public float currentTime, maxTime, xPos, zPos;
+
+    #endregion
 
     private void Awake()
     {
@@ -19,8 +30,11 @@ public class SkillManager : MonoBehaviour
     }
     private void Start()
     {
-        maxTime = skillThunderSlider.maxValue = 15f; //Discutable
-        currentTime = skillThunderSlider.value = 0f; //discutable
+        // Définit le temps maximum et initialise le temps actuel
+        maxTime = skillThunderSlider.maxValue = 15f; // Peut être ajusté
+        currentTime = skillThunderSlider.value = 0f; // Peut être ajusté
+
+        // Désactive le Thunder volant et l'effet d'étincelle
         flyingThunder.SetActive(false);
         spark.enabled = false;
         spark.enabled = false;
@@ -33,7 +47,8 @@ public class SkillManager : MonoBehaviour
         float delta = Time.deltaTime;
         HandleTimerThunder(delta);
     }
-    
+
+    // Gère le timer pour la compétence Thunder
     void HandleTimerThunder(float delta)
     {
         if(maskManager.isdead) return;
@@ -52,6 +67,7 @@ public class SkillManager : MonoBehaviour
         }
     }
 
+    //Logique de la compétence du Thunder volant
     public void HandleFlyingThunder()
     { 
         maskManager.transform.position = new Vector3(xPos, maskManager.transform.position.y, zPos);

@@ -896,6 +896,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrailThief
       objectReference: {fileID: 0}
+    - target: {fileID: 194016, guid: 263867d4955e3644f9a1dfa779ab7d1e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 475750, guid: 263867d4955e3644f9a1dfa779ab7d1e, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.1
@@ -984,6 +988,11 @@ PrefabInstance:
 --- !u!4 &363513814 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 475750, guid: 263867d4955e3644f9a1dfa779ab7d1e, type: 3}
+  m_PrefabInstance: {fileID: 363513813}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &363513815 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 194016, guid: 263867d4955e3644f9a1dfa779ab7d1e, type: 3}
   m_PrefabInstance: {fileID: 363513813}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &364205917 stripped
@@ -4938,6 +4947,7 @@ MonoBehaviour:
   joystick: {fileID: 0}
   canCount: 0
   isdead: 0
+  trailPlayer: {fileID: 363513815}
 --- !u!54 &1547913346
 Rigidbody:
   m_ObjectHideFlags: 0
