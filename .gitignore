@@ -13,10 +13,6 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
-# Plugins
-/[Aa]ssets/Plugins
-/[Aa]ssets/Firebase/
-
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
@@ -59,6 +55,9 @@ ExportedObj/
 *.pdb.meta
 *.mdb.meta
 
+# Keystore
+*.keystore
+
 # Unity3D generated file on crash reports
 sysinfo.txt
 
@@ -70,6 +69,9 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+# Sample from packages
+/[Aa]ssets/[Ss]amples
 
 # Packed Addressables
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*

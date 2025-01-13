@@ -5,7 +5,6 @@ public class MaskManager : MonoBehaviour
     #region variables
     // Positions pour différents états ou points de contrôle
     [SerializeField] Vector3[] Position = new Vector3 [4];
-    [SerializeField] GameObject maze;
 
     // Vitesse de déplacement du GameObject
     float moveSpeed = 0.6f;
@@ -23,13 +22,14 @@ public class MaskManager : MonoBehaviour
     private Rigidbody rb;
 
     // Référence au GameObject pour l'effet de traînée
+    [SerializeField] GameObject trailPlayer;
 
     #endregion
 
     // Méthode native appelée lorsque l'instance du script est chargée, ne necessite pas de réferencement
     void Awake()
     {
-        HandleStartGamePosition();
+        HandlePosition();
         rb = GetComponent<Rigidbody>();
         gameManager = FindFirstObjectByType<GameManager>();
         canCount = true;
@@ -44,6 +44,11 @@ public class MaskManager : MonoBehaviour
     }
 
     // Méthode native appelée à des intervalles de temps fixes, ne necessite pas de réferencement
+    private void FixedUpdate()
+    {
+        if(rb.linearVelocity.magnitude > 0) trailPlayer.SetActive(true);
+        else trailPlayer.SetActive(false);
+    }
 
     // Gère le déplacement du joueur
     void Walk()
@@ -53,10 +58,8 @@ public class MaskManager : MonoBehaviour
     }
 
     //Gestion de l'apparition sur les différentes positions
-    public void HandleStartGamePosition()
+    public void HandlePosition()
     {
-        int rotCoef = Random.Range(-3,4);
-        maze.transform.rotation = Quaternion.Euler(0, 90 * rotCoef, 0);
         transform.position = Position[Random.Range(0,4)];
     }
 }
