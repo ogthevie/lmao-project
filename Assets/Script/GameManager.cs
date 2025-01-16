@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public float timer;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl;
+    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu;
 
     // Tableau des clips audio utilisés dans le jeu
     public AudioClip [] audioClips = new AudioClip[3];
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public int score, primeScore;
 
     // Indicateur pour savoir si le jeu peut être joué
-    public bool canPlay;
+    public bool canPlay, OnPause;
 
     #endregion
 
@@ -113,6 +113,22 @@ public class GameManager : MonoBehaviour
     {
         gameAudioSource.Play();
         gameAudioSource.loop = true;
+    }
+
+    public void HandlePauseMenu()
+    {
+        if(!OnPause)
+        {
+            Time.timeScale = 0;
+            pauseMenu.SetActive(true);
+            OnPause = true;
+        } 
+        else
+        {
+            Time.timeScale = 1;
+            pauseMenu.SetActive(false);
+            OnPause = false;
+        } 
     }
 
     #region Gestion des sauvegardes

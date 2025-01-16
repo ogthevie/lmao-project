@@ -61,7 +61,7 @@ public class DeadManager : MonoBehaviour
             }
             gameManager.gameAudioSource.loop = false;
             gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[3]);
-            maskManager.HandlePosition();
+            maskManager.HandleStartGamePosition();
             maskManager.isdead = false;
             gameManager.timer = 0;
             gameManager.chronoVisual.text = "0";
