@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 00191177e5fd5c4468ad546ce87ef329
+AssetOrigin:
+  serializedVersion: 1
+  productId: 139936
+  packageName: Magic Hits
+  packageVersion: 1.1.3
+  assetPath: Assets/Hovl Studio/HSFiles/Shaders/Shader Graph/HS_Blend_CG.shadergraph
+  uploadId: 719249
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -8,10 +15,3 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
-AssetOrigin:
-  serializedVersion: 1
-  productId: 139936
-  packageName: Magic Hits
-  packageVersion: 1.1.3
-  assetPath: Assets/Hovl Studio/HSFiles/Shaders/Shader Graph/HS_Blend_CG.shadergraph
-  uploadId: 719249
