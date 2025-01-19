@@ -78,6 +78,5 @@ public class SkillManager : MonoBehaviour
         skillThunderSlider.maxValue = maxTime;
         flyingThunder.SetActive(false);
         spark.enabled = false;
-
     }
 }
