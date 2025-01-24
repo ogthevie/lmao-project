@@ -10,6 +10,7 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /.utmp
+/Fonts
 *.csproj
 *.sln
 
