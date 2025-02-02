@@ -71,9 +71,10 @@ public class DeadManager : MonoBehaviour
             skillManager.spark.enabled = false;
             Time.timeScale = 1;
             GameObject mask = maskManager.transform.GetChild(0).gameObject;
+            gameManager.ResetWall();
             mask.SetActive(true);
             gameManager.LoadGame();
-            gameManager.ReloadMainTheme();
+            //gameManager.ReloadMainTheme();
             this.gameObject.SetActive(false);
     }
 }
