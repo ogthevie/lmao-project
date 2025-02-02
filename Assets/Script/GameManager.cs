@@ -2,7 +2,8 @@ using System;
 using UnityEngine;
 using TMPro;
 using System.Collections;
-using UnityEngine.UI;
+using System.Collections.Generic;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,20 +14,22 @@ public class GameManager : MonoBehaviour
     // Références aux éléments UI pour afficher le chronomètre et le score
     public TextMeshProUGUI chronoVisual, primeScoreVisual;
 
-    // Timer pour suivre le temps écoulé
-    public float timer;
-
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu;
+    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze;
 
     // Tableau des clips audio utilisés dans le jeu
     public AudioClip [] audioClips = new AudioClip[3];
+    [SerializeField] List <GameObject> walls = new List<GameObject>();
 
     // Variables pour le score et le score prime
     public int score, primeScore;
+    // Timer pour suivre le temps écoulé
+    public float timer;
 
     // Indicateur pour savoir si le jeu peut être joué
-    public bool canPlay, OnPause;
+    public bool canPlay, OnPause, wallOnFire, wallOnMove;
+    [SerializeField] Color dynamicWall = new Color(0.90f, 0.09f, 0.05f);
+    [SerializeField] Color staticWall = new Color(0.04f, 0.1f, 0.30f);
 
     #endregion
 
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviour
         maskManager = FindFirstObjectByType<MaskManager>();
         //ClearAllSaves();
         LoadGame();
+        AddMazeChildrenToWalls();
     }
 
     void Start()
@@ -61,6 +65,14 @@ public class GameManager : MonoBehaviour
             score = (int)timer;
             if(primeScore < score) primeScore = score;
             chronoVisual.text = Mathf.Ceil(timer).ToString();
+
+
+            if(!wallOnMove && score >= 50f) 
+            {
+                wallOnMove = true;
+                WallMoveTheme();
+            }
+            if(!wallOnFire && score >= 200f) HandleWallOnFire();
 
         }
     }
@@ -88,6 +100,23 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    void AddMazeChildrenToWalls()
+    {
+        if (maze != null)
+        {
+            bool isFirstChild = true;
+            foreach (Transform child in maze.transform)
+            {
+                if (isFirstChild)
+                {
+                    isFirstChild = false;
+                    continue;
+                }
+                walls.Add(child.gameObject);
+            }
+        }
+    }
+
     public void HandleLetsPlay()
     {
         StartCoroutine(HandleTransition());
@@ -106,13 +135,35 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.7f);
         transitionScreen.SetActive(false);
         canPlay = true;
-        ReloadMainTheme();
+        //ReloadMainTheme();
     }
 
-    public void ReloadMainTheme()
+    public void WallMoveTheme()
     {
         gameAudioSource.Play();
         gameAudioSource.loop = true;
+    }
+
+    public void ResetWall()
+    {
+        foreach (GameObject wall in walls)
+        {
+            var material = wall.GetComponent<MeshRenderer>().materials[0];
+            material.SetColor("_EmissionColor", staticWall);
+            Vector3 initPosition = wall.GetComponent<OscillationManager>().basePosition;
+            wall.transform.position = initPosition;
+        }
+        wallOnFire = wallOnMove = false;
+    }
+
+    public void HandleWallOnFire()
+    {
+        foreach (GameObject wall in walls)
+        {
+            var material = wall.GetComponent<MeshRenderer>().materials[0];
+            material.SetColor("_EmissionColor", dynamicWall);
+        }
+        wallOnFire = true;
     }
 
     public void HandlePauseMenu()
