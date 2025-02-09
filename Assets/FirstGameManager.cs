@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
 using TMPro;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
 using UnityEngine;
 
 public class FirstGameManager : MonoBehaviour
@@ -33,26 +31,9 @@ public class FirstGameManager : MonoBehaviour
 
             credentialsManager.SignIn();
 
-            await UpdatePlayerName();
-
             mainMenu.SetActive(true);
 
             Destroy(this.gameObject, 5f);
-        }
-    }
-
-    private async Task UpdatePlayerName()
-    {
-        try
-        {
-            await AuthenticationService.Instance.UpdatePlayerNameAsync(playerNameInputField.text);
-            Debug.Log("Player name has been updated successfully.");
-        }
-        catch (RequestFailedException)
-        {
-            Debug.Log("Error updating Player name.");
-            await DisplayErrorMessageAsync();
-            return;
         }
     }
 

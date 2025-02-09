@@ -13,15 +13,9 @@ public class LeaderboardManager : MonoBehaviour
 
     public async void AddScoreToLeaderboard(string playerName, int score)
     {
-        // if (!servicesInitialized)
-        // {
-        //     Debug.LogError("Les services Unity ne sont pas initialisés.");
-        //     return;
-        // }
-
         try
         {
-            string playerId = playerName + "_" + System.DateTime.UtcNow.Ticks;
+            string playerId = playerName;
             var metadata = new Dictionary<string, object>
             {
                 { "playerId", playerId }
