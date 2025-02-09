@@ -33,7 +33,7 @@ public class FirstGameManager : MonoBehaviour
 
             credentialsManager.SignIn();
 
-            UpdatePlayerName();
+            await UpdatePlayerName();
 
             mainMenu.SetActive(true);
 
@@ -41,7 +41,7 @@ public class FirstGameManager : MonoBehaviour
         }
     }
 
-    private async void UpdatePlayerName()
+    private async Task UpdatePlayerName()
     {
         try
         {
