@@ -3,19 +3,19 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
     #region variables
     MaskManager maskManager;
+    LeaderboardManager leaderboardManager;
     public AudioSource gameAudioSource;
 
     // Références aux éléments UI pour afficher le chronomètre et le score
-    public TextMeshProUGUI chronoVisual, primeScoreVisual;
+    public TextMeshProUGUI chronoVisual, primeScoreVisual, playerNameTMP, rankOnline;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze;
+    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, setNameMenu;
 
     // Tableau des clips audio utilisés dans le jeu
     public AudioClip [] audioClips = new AudioClip[3];
@@ -25,11 +25,11 @@ public class GameManager : MonoBehaviour
     public int score, primeScore;
     // Timer pour suivre le temps écoulé
     public float timer;
-
     // Indicateur pour savoir si le jeu peut être joué
-    public bool canPlay, OnPause, wallOnFire, wallOnMove;
+    public bool canPlay, OnPause, wallOnFire, wallOnMove, isControllerConnected;
     [SerializeField] Color dynamicWall = new Color(0.90f, 0.09f, 0.05f);
     [SerializeField] Color staticWall = new Color(0.04f, 0.1f, 0.30f);
+    public string thiefPlayerName;
 
     #endregion
 
@@ -37,14 +37,15 @@ public class GameManager : MonoBehaviour
     {
         gameAudioSource = GetComponent<AudioSource>();
         maskManager = FindFirstObjectByType<MaskManager>();
+        leaderboardManager = GetComponent<LeaderboardManager>();
         //ClearAllSaves();
         LoadGame();
         AddMazeChildrenToWalls();
-    }
-
-    void Start()
-    {
-        gameAudioSource.PlayOneShot(audioClips[0]);
+        if(!string.IsNullOrEmpty(thiefPlayerName))
+        {
+            Destroy(setNameMenu);
+            mainMenu.SetActive(true);
+        }
     }
     
     void Update()
@@ -55,6 +56,11 @@ public class GameManager : MonoBehaviour
         if(!maskManager.isdead) HandleTimer(delta);
         //Debug.Log(timer);
     }
+
+    /*private void FixedUpdate()
+    {
+        CheckForGamePad();    
+    }*/
 
     // Gère le chronomètre du jeu
     void HandleTimer(float delta)
@@ -76,29 +82,6 @@ public class GameManager : MonoBehaviour
 
         }
     }
-
-
-    #region choix de la main préférentiel pour jouer
-
-    public void HandLeftGame()
-    {
-        leftControl.SetActive(true);
-        Destroy(leftButton);
-        Destroy(rightControl);
-        Destroy(rightButton);
-        StartCoroutine(HandleTransition());
-    }
-
-    public void HandRightGame()
-    {
-        rightControl.SetActive(true);
-        Destroy(rightButton);
-        Destroy(leftButton);
-        Destroy(leftControl);
-        StartCoroutine(HandleTransition());
-    }
-
-    #endregion
 
     void AddMazeChildrenToWalls()
     {
@@ -127,6 +110,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator HandleTransition()
     {
+        UpdateRanked();
         gameAudioSource.PlayOneShot(audioClips[1]);
         yield return new WaitForSeconds(1f);
         transitionScreen.SetActive(true);
@@ -188,13 +172,16 @@ public class GameManager : MonoBehaviour
     {
         GameData gameData = new GameData
         {
-            scoreData = primeScore
+            scoreData = primeScore,
+            nameData = thiefPlayerName,
+            
         };
 
         string thiefJson = JsonUtility.ToJson(gameData);
         string filepath = Application.persistentDataPath + "/tentativeData.json";
         System.IO.File.WriteAllText(filepath, thiefJson);
-        Debug.Log(gameData.scoreData);
+        //Debug.Log(gameData.scoreData);
+        leaderboardManager.AddScoreToLeaderboard(thiefPlayerName, primeScore);
     }
 
     // Charge le jeu depuis les sauvegardes
@@ -207,9 +194,19 @@ public class GameManager : MonoBehaviour
             GameData gameData = JsonUtility.FromJson<GameData>(thiefJson);
             
             primeScore = gameData.scoreData;
-        }
-        primeScoreVisual.text = primeScore.ToString();
+            thiefPlayerName = gameData.nameData;
+            playerNameTMP.text = thiefPlayerName;
 
+            primeScoreVisual.text = primeScore.ToString();
+            Debug.Log("Donnee chargees");
+            
+        }
+    }
+
+    public void UpdateRanked()
+    {
+        if(primeScore <= 0) return;
+        leaderboardManager.GetPlayerRank(thiefPlayerName);
     }
 
     // Efface toutes les sauvegardes
@@ -238,10 +235,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /*private void CheckForGamePad()
+    {
+        string[] joystickNames = Input.GetJoystickNames();
+
+        if(joystickNames.Length == 0)
+        {
+            //Debug.Log("Manette déconnectée");
+            //needGamepad.enabled = true;
+            //Time.timeScale = 0;
+            isControllerConnected = false;            
+        }
+
+        if (joystickNames.Length > 0 && !string.IsNullOrEmpty(joystickNames[0]))
+        {
+            if (!isControllerConnected)
+            {
+                Debug.Log("Manette connectée : " + joystickNames[0]);
+                isControllerConnected = true;
+            }
+        }
+        else
+        {
+            if (isControllerConnected)
+            {
+                //Debug.Log("Manette déconnectée");
+                isControllerConnected = false;
+            }
+        }
+    }*/
+
 
     class GameData
     {
         public int scoreData;
+        public string nameData;
     }
 
     #endregion

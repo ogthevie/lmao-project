@@ -62,16 +62,26 @@ public class MaskManager : MonoBehaviour
     void Update()
     {
         if(!gameManager.canPlay) return;
-        Walk();
+        
+        /*if(gameManager.isControllerConnected)AnalogJoystickWalk();
+        else*/ VirtualJoystickWalk();
     }
 
     // Méthode native appelée à des intervalles de temps fixes, ne necessite pas de réferencement
 
     // Gère le déplacement du joueur
-    void Walk()
+    void VirtualJoystickWalk()
     {
         Vector3 movement = new Vector3(joystick.Horizontal, 0f, joystick.Vertical) * moveSpeed;
         rb.MovePosition(rb.position + movement * Time.fixedDeltaTime);
+    }
+
+    void AnalogJoystickWalk()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 movement = new Vector3(horizontal, 0f, vertical) * moveSpeed;
+        rb.MovePosition(rb.position + movement * Time.fixedDeltaTime);        
     }
 
     //Gestion de l'apparition sur les différentes positions
@@ -81,4 +91,6 @@ public class MaskManager : MonoBehaviour
         //maze.transform.rotation = Quaternion.Euler(0, 90 * rotCoef, 0);
         transform.position = Position[Random.Range(0,4)];
     }
+
+
 }

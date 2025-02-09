@@ -74,6 +74,7 @@ public class DeadManager : MonoBehaviour
             gameManager.ResetWall();
             mask.SetActive(true);
             gameManager.LoadGame();
+            gameManager.UpdateRanked();
             //gameManager.ReloadMainTheme();
             this.gameObject.SetActive(false);
     }
