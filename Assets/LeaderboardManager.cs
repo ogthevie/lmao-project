@@ -2,18 +2,29 @@ using UnityEngine;
 using Unity.Services.Leaderboards;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Services.Core;
+using Unity.Services.Leaderboards.Models;
+using Newtonsoft.Json;
 
-[DefaultExecutionOrder(-10)]
 public class LeaderboardManager : MonoBehaviour
 {
-    public bool servicesInitialized = false;
-    
+    [System.Serializable]
+    public class PlayerData
+    {
+        public string playerId;
+    }
+
     [SerializeField] GameManager gameManager;
+    [SerializeField] GameObject leaderBoardUI;
+    [SerializeField] private Transform leaderboardsItem;
+    [SerializeField] private Transform leaderboardsContentParent;
 
     private readonly string leaderboardID = "Thief_Leaderboard_Dev";
-    [SerializeField] TextMeshProUGUI [] playersNames;
-    [SerializeField] TextMeshProUGUI [] playersScores;
-    [SerializeField] GameObject leaderBoardUI;
+
+    public async void InitializeLeaderboards()
+    {
+        await UnityServices.InitializeAsync();
+    }
 
     public async void AddScoreToLeaderboard(string playerName, int score)
     {
@@ -51,9 +62,10 @@ public class LeaderboardManager : MonoBehaviour
     }
 
 
-    public void OpenLeaderBoardMenu()
+    public void OpenLeaderBoardMenuAsync()
     {
-        DisplayLeaderboard();
+        ClearLeaderboardsItems();
+        FetchLeaderboardsData();
         leaderBoardUI.SetActive(true);
     }
 
@@ -62,24 +74,44 @@ public class LeaderboardManager : MonoBehaviour
         leaderBoardUI.SetActive(false);
     }
 
-    public async void DisplayLeaderboard()
+    public void ClearLeaderboardsItems()
     {
-        try
+        foreach (Transform transform in leaderboardsContentParent)
         {
-            var scores = await LeaderboardsService.Instance.GetScoresAsync(leaderboardID);
-
-            int count = Mathf.Min(scores.Results.Count, 10);
-            
-            for (int i = 0; i < count; i++)
+            if (transform != null && transform.gameObject != null)
             {
-                if(scores.Results[i] == null) return;
-                playersNames[i].text = scores.Results[i].Metadata;
-                playersScores[i].text = scores.Results[i].Score.ToString();
+                Destroy(transform.gameObject);
             }
         }
-        catch (System.Exception e)
+    }
+
+    private async void FetchLeaderboardsData()
+    {
+        LeaderboardScoresPage leaderboardScoresPage = await LeaderboardsService.Instance.GetScoresAsync(leaderboardID, new GetScoresOptions { IncludeMetadata = true });
+
+        foreach (LeaderboardEntry leaderboardEntry in leaderboardScoresPage.Results)
         {
-            Debug.LogError("Erreur lors de l'affichage du tableau de classement : " + e.Message);
+            Transform leaderboardItem = Instantiate(leaderboardsItem, leaderboardsContentParent);
+
+            if (!string.IsNullOrEmpty(leaderboardEntry.Metadata))
+            {
+                try
+                {
+                    PlayerData playerData = JsonUtility.FromJson<PlayerData>(leaderboardEntry.Metadata);                    
+                    leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = playerData.playerId;
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("Failed to parse Metadata JSON: " + e.Message);
+                }
+            }
+            else
+            {
+                leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerName;
+            }
+
+            leaderboardItem.GetChild(0).GetComponent<TextMeshProUGUI>().text = (leaderboardEntry.Rank + 1).ToString();
+            leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
         }
     }
 }

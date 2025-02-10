@@ -12,10 +12,8 @@ public class CredentialsManager : MonoBehaviour
     {
         await UnityServices.InitializeAsync();
         PlayerAccountService.Instance.SignedIn += SignInWithUnity;
-
-        leaderboardManager.servicesInitialized = true;
-
         await SignInCachedUser();
+        leaderboardManager.InitializeLeaderboards();
     }
 
     async void SignInWithUnity()

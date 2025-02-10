@@ -181,7 +181,6 @@ public class GameManager : MonoBehaviour
         string thiefJson = JsonUtility.ToJson(gameData);
         string filepath = Application.persistentDataPath + "/tentativeData.json";
         System.IO.File.WriteAllText(filepath, thiefJson);
-        //Debug.Log(gameData.scoreData);
         leaderboardManager.AddScoreToLeaderboard(thiefPlayerName, primeScore);
     }
 
