@@ -53,8 +53,8 @@ public class LeaderboardManager : MonoBehaviour
 
     public void OpenLeaderBoardMenu()
     {
-        leaderBoardUI.SetActive(true);
         DisplayLeaderboard();
+        leaderBoardUI.SetActive(true);
     }
 
     public void CloseLeaderBoardMenu()
