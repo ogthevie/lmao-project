@@ -23,6 +23,7 @@ public class MainMenuManager : MonoBehaviour
         Destroy(gameManager.rightControl);
         Destroy(gameManager.rightButton);
         StartCoroutine(gameManager.HandleTransition());
+        gameManager.UpdateRanked();
     }
 
     public void HandRightGame()
@@ -32,6 +33,7 @@ public class MainMenuManager : MonoBehaviour
         Destroy(gameManager.leftButton);
         Destroy(gameManager.leftControl);
         StartCoroutine(gameManager.HandleTransition());
+        gameManager.UpdateRanked();
     }
 
     #endregion

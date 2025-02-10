@@ -11,7 +11,7 @@ public class CredentialsManager : MonoBehaviour
     async void Awake()
     {
         await UnityServices.InitializeAsync();
-        PlayerAccountService.Instance.SignedIn +=  SignInWithUnity;
+        PlayerAccountService.Instance.SignedIn += SignInWithUnity;
 
         leaderboardManager.servicesInitialized = true;
 
@@ -20,9 +20,16 @@ public class CredentialsManager : MonoBehaviour
 
     async void SignInWithUnity()
     {
+        if (AuthenticationService.Instance.IsSignedIn)
+        {
+            Debug.Log("L'utilisateur est déjà connecté.");
+            return;
+        }
+
         try
         {
             await AuthenticationService.Instance.SignInWithUnityAsync(PlayerAccountService.Instance.AccessToken);
+            Debug.Log("Connexion réussie avec Unity.");
         }
         catch (RequestFailedException ex)
         {
@@ -37,7 +44,7 @@ public class CredentialsManager : MonoBehaviour
 
     async Task SignInCachedUser()
     {
-        if (!AuthenticationService.Instance.SessionTokenExists) 
+        if (!AuthenticationService.Instance.SessionTokenExists)
         {
             return;
         }

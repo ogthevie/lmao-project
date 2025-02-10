@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.7f);
         transitionScreen.SetActive(false);
         canPlay = true;
+        LoadGame();
         //ReloadMainTheme();
     }
 
@@ -196,16 +197,12 @@ public class GameManager : MonoBehaviour
             primeScore = gameData.scoreData;
             thiefPlayerName = gameData.nameData;
             playerNameTMP.text = thiefPlayerName;
-
-            primeScoreVisual.text = primeScore.ToString();
             Debug.Log("Donnee chargees");
-            
         }
     }
 
     public void UpdateRanked()
     {
-        if(primeScore <= 0) return;
         leaderboardManager.GetPlayerRank(thiefPlayerName);
     }
 
