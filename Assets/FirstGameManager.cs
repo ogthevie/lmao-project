@@ -5,18 +5,27 @@ using UnityEngine;
 public class FirstGameManager : MonoBehaviour
 {
     public GameObject playerNameError;
-    public TextMeshProUGUI playerNameInputField;
+    public TMP_InputField playerNameInputField;
     public CredentialsManager credentialsManager;
 
     [SerializeField] GameManager gameManager;
     [SerializeField] Animation anim;
     [SerializeField] GameObject mainMenu;
 
-    public async void FirstStartGame()
+    private void Start()
+    {
+        playerNameInputField.onValueChanged.AddListener(delegate { RemoveSpaces(); });    
+    }
+
+    void RemoveSpaces()
+    {
+        playerNameInputField.text = playerNameInputField.text.Replace(" ", "");
+    }
+
+    public void FirstStartGame()
     {
         if(playerNameInputField.text.Length <= 2)
         {
-            await DisplayErrorMessageAsync();
         } else {
             gameManager.thiefPlayerName = playerNameInputField.text;
             gameManager.primeScore = 0;
@@ -37,12 +46,13 @@ public class FirstGameManager : MonoBehaviour
         }
     }
 
-    private async Task DisplayErrorMessageAsync()
+    //L'input field a été configuré de telle sorte qu'on ne puisse pas mettre d'espace et la longeur maximal de caractere soit 14
+    /*private async Task DisplayErrorMessageAsync()
     {
         playerNameError.SetActive(true);
 
         await Task.Delay(5000);
 
         playerNameError.SetActive(false);
-    }
+    }*/
 }

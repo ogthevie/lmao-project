@@ -12,17 +12,19 @@ public class GameManager : MonoBehaviour
     public AudioSource gameAudioSource;
 
     // Références aux éléments UI pour afficher le chronomètre et le score
-    public TextMeshProUGUI chronoVisual, primeScoreVisual, playerNameTMP, rankOnline;
+    public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline;
+
+    public TextMeshProUGUI statThiefName, statCallSign, statNumberOfRuns, statBestScore;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, setNameMenu;
+    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, setNameMenu, statBoard;
 
     // Tableau des clips audio utilisés dans le jeu
     public AudioClip [] audioClips = new AudioClip[3];
     [SerializeField] List <GameObject> walls = new List<GameObject>();
 
     // Variables pour le score et le score prime
-    public int score, primeScore;
+    public int score, primeScore, runs;
     // Timer pour suivre le temps écoulé
     public float timer;
     // Indicateur pour savoir si le jeu peut être joué
@@ -163,6 +165,8 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1;
             pauseMenu.SetActive(false);
+            leaderboardManager.leaderBoardUI.SetActive(false);
+            statBoard.SetActive(false);
             OnPause = false;
         } 
     }
@@ -175,6 +179,7 @@ public class GameManager : MonoBehaviour
         {
             scoreData = primeScore,
             nameData = thiefPlayerName,
+            runData = runs,
             
         };
 
@@ -195,7 +200,7 @@ public class GameManager : MonoBehaviour
             
             primeScore = gameData.scoreData;
             thiefPlayerName = gameData.nameData;
-            playerNameTMP.text = thiefPlayerName;
+            runs = gameData.runData;
             Debug.Log("Donnee chargees");
         }
     }
@@ -204,6 +209,35 @@ public class GameManager : MonoBehaviour
     {
         leaderboardManager.GetPlayerRank(thiefPlayerName);
     }
+
+    public void OpenStatsBoard()
+    {
+        FetchStatBoardData();
+        statBoard.SetActive(true);
+    }
+
+    public void CloseStatBoard()
+    {
+        statBoard.SetActive(false);
+    }
+
+    public void FetchStatBoardData()
+    {
+        leaderboardManager.GetMyData();
+        statNumberOfRuns.text = runs.ToString();
+        statThiefName.text = thiefPlayerName;
+
+    }
+
+    public void ExitGame()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // Arrête le jeu dans la version Editor
+        #else
+        Application.Quit(); // Arrête le jeu dans la version buildé du jeu (je ne sais pas si c'est compréhensible :)
+        #endif
+    }
+
 
     // Efface toutes les sauvegardes
     public void ClearAllSaves()
@@ -230,7 +264,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Erreur lors de la suppression des sauvegardes : " + e.Message);
         }
     }
-
     /*private void CheckForGamePad()
     {
         string[] joystickNames = Input.GetJoystickNames();
@@ -264,7 +297,7 @@ public class GameManager : MonoBehaviour
 
     class GameData
     {
-        public int scoreData;
+        public int scoreData, runData;
         public string nameData;
     }
 

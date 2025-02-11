@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Core;
 using Unity.Services.Leaderboards.Models;
-using Newtonsoft.Json;
 
 public class LeaderboardManager : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class LeaderboardManager : MonoBehaviour
     }
 
     [SerializeField] GameManager gameManager;
-    [SerializeField] GameObject leaderBoardUI;
+    public GameObject leaderBoardUI;
     [SerializeField] private Transform leaderboardsItem;
     [SerializeField] private Transform leaderboardsContentParent;
 
@@ -113,5 +112,12 @@ public class LeaderboardManager : MonoBehaviour
             leaderboardItem.GetChild(0).GetComponent<TextMeshProUGUI>().text = (leaderboardEntry.Rank + 1).ToString();
             leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
         }
+    }
+
+    public async void GetMyData()
+    {
+        var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(leaderboardID);
+        gameManager.statCallSign.text = myPlayerData.PlayerName.ToString();
+        gameManager.statBestScore.text = myPlayerData.Score.ToString();
     }
 }

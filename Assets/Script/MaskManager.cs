@@ -49,7 +49,7 @@ public class MaskManager : MonoBehaviour
             gameManager.gameAudioSource.Stop();
             gameManager.gameAudioSource.loop = false;
             gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[2]);
-
+            gameManager.runs += 1;
             // Sauvegarde la tentative de jeu
             gameManager.SaveGame();
 
