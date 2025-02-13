@@ -30,12 +30,11 @@ public class DeadManager : MonoBehaviour
         maskManager.canCount = false;
 
         // Affiche le message de trash talk en fonction du temps écoulé
-        if(gameManager.timer < 10f) trashTalkDead.text = texts[0];
-        else if(gameManager.timer >= 10f && gameManager.timer < 30f) trashTalkDead.text = texts[1];
-        else if(gameManager.timer >= 30f && gameManager.timer < 60f) trashTalkDead.text = texts[2];
-        else if(gameManager.timer >= 60f && gameManager.timer < 90f) trashTalkDead.text = texts[3];
-        else if(gameManager.timer >= 90f && gameManager.timer < 120f) trashTalkDead.text = texts[4];
-        else if(gameManager.timer >= 120 ) trashTalkDead.text = texts[5];
+        if(gameManager.timer < 20f)
+        {
+            int index = Random.Range(0,8);
+            trashTalkDead.text = texts[index];
+        }
     }
 
     // Méthode native appelée lorsque l'objet devient inactif, ne nécessite pas de réferencement

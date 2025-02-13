@@ -1,10 +1,11 @@
+using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
 public class FirstGameManager : MonoBehaviour
 {
-    public GameObject playerNameError;
+    [SerializeField] GameObject playerNameError, notifWriteName;
     public TMP_InputField playerNameInputField;
     public CredentialsManager credentialsManager;
 
@@ -24,9 +25,11 @@ public class FirstGameManager : MonoBehaviour
 
     public void FirstStartGame()
     {
-        if(playerNameInputField.text.Length <= 2)
+        if(playerNameError.activeSelf) return;
+
+        if(playerNameInputField.text.Length <= 2) StartCoroutine (DisplayErrorMessage());
+        else
         {
-        } else {
             gameManager.thiefPlayerName = playerNameInputField.text;
             gameManager.primeScore = 0;
 
@@ -46,13 +49,15 @@ public class FirstGameManager : MonoBehaviour
         }
     }
 
-    //L'input field a été configuré de telle sorte qu'on ne puisse pas mettre d'espace et la longeur maximal de caractere soit 14
-    /*private async Task DisplayErrorMessageAsync()
+    
+    IEnumerator DisplayErrorMessage()
     {
         playerNameError.SetActive(true);
+        notifWriteName.SetActive(false);
 
-        await Task.Delay(5000);
+        yield return new WaitForSeconds(5f);
 
+        notifWriteName.SetActive(true);
         playerNameError.SetActive(false);
-    }*/
+    }
 }
