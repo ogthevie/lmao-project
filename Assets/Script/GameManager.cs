@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     // Références aux différents éléments UI
     public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, setNameMenu, statBoard;
+    [SerializeField] Button lbutton, rbutton;
 
     // Tableau des clips audio utilisés dans le jeu
     public AudioClip [] audioClips = new AudioClip[3];

@@ -11,7 +11,6 @@ public class FirstGameManager : MonoBehaviour
 
     [SerializeField] GameManager gameManager;
     [SerializeField] Animation anim;
-    [SerializeField] GameObject mainMenu;
 
     private void Start()
     {
@@ -43,7 +42,7 @@ public class FirstGameManager : MonoBehaviour
 
             credentialsManager.SignIn();
 
-            mainMenu.SetActive(true);
+            gameManager.mainMenu.SetActive(true);
 
             Destroy(this.gameObject, 5f);
         }

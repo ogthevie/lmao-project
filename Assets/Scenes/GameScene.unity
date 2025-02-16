@@ -758,6 +758,8 @@ MonoBehaviour:
   maze: {fileID: 304866633}
   setNameMenu: {fileID: 122854708}
   statBoard: {fileID: 1777428918}
+  lbutton: {fileID: 284564502}
+  rbutton: {fileID: 284564501}
   audioClips:
   - {fileID: 8300000, guid: 73668e8881ff2994baa29b64afbee836, type: 3}
   - {fileID: 8300000, guid: ca9586367fc291b448ef661979f5baf2, type: 3}
@@ -1100,7 +1102,6 @@ MonoBehaviour:
   credentialsManager: {fileID: 371938356}
   gameManager: {fileID: 98020596}
   anim: {fileID: 122854713}
-  mainMenu: {fileID: 978884506}
 --- !u!111 &122854713
 Animation:
   m_ObjectHideFlags: 0
@@ -1768,6 +1769,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ff2bc90b05f6d24791a627193e1deb2, type: 3}
+--- !u!114 &284564501 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9049938628308401438, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+  m_PrefabInstance: {fileID: 978884504}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185280257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &284564502 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7219661740160123574, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+  m_PrefabInstance: {fileID: 978884504}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657050483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &304866633 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8821300515454178658, guid: 25aa2cc004bf0aa469ea11312ff56c51, type: 3}
@@ -5379,7 +5402,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6298847937795107682, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7219661740160123574, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_Enabled
@@ -5403,7 +5426,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7637763101375924189, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_text
-      value: Slide your finger left or right to suit your movement preferences
+      value: To begin, touch the left or right side of the screen, depending on your
+        josytick preference.
       objectReference: {fileID: 0}
     - target: {fileID: 7637763101375924189, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_fontSize
@@ -5500,6 +5524,10 @@ PrefabInstance:
     - target: {fileID: 8554050999359018446, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9049938628308401438, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9049938628308401438, guid: 000bf2bdaf2128e48b7524692748cb3c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -7860,7 +7888,7 @@ MonoBehaviour:
   m_Content: {fileID: 6947393}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 0
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
