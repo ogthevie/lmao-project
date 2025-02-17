@@ -7,7 +7,6 @@ using UnityEngine;
 public class CredentialsManager : MonoBehaviour
 {
     public LeaderboardManager leaderboardManager;
-    public bool isLoginSuccessful = false;
 
     async void Awake()
     {
@@ -22,7 +21,6 @@ public class CredentialsManager : MonoBehaviour
         if (AuthenticationService.Instance.IsSignedIn)
         {
             Debug.Log("L'utilisateur est déjà connecté.");
-            isLoginSuccessful = true;
             return;
         }
 
@@ -30,12 +28,10 @@ public class CredentialsManager : MonoBehaviour
         {
             await AuthenticationService.Instance.SignInWithUnityAsync(PlayerAccountService.Instance.AccessToken);
             Debug.Log("Connexion réussie avec Unity.");
-            isLoginSuccessful = true;
         }
         catch (RequestFailedException ex)
         {
             Debug.LogException(ex);
-            isLoginSuccessful = false;
         }
     }
 
@@ -65,7 +61,7 @@ public class CredentialsManager : MonoBehaviour
         }
     }
 
-    public async void SignIn()
+    public async Task SignIn()
     {
         if (PlayerAccountService.Instance.IsSignedIn)
         {

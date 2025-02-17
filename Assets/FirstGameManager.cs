@@ -27,7 +27,7 @@ public class FirstGameManager : MonoBehaviour
         playerNameInputField.text = playerNameInputField.text.Replace(" ", "");
     }
 
-    public void FirstStartGame()
+    public async void FirstStartGame()
     {
         if(playerNameError.activeSelf) return;
 
@@ -45,18 +45,20 @@ public class FirstGameManager : MonoBehaviour
 
             anim.enabled = true;
 
-            credentialsManager.SignIn();
-
-            if (credentialsManager.isLoginSuccessful == true)
+            try
             {
+                await credentialsManager.SignIn();
+
                 UpdatePlayerNameInLeadeboard(gameManager.thiefPlayerName);
 
                 gameManager.mainMenu.SetActive(true);
                 Destroy(this.gameObject, 5f);
             }
-            else {
-                Debug.Log("Une erreur est survenue, veuillez réessayer.");
+            catch (System.Exception ex)
+            {
+                Debug.LogError(ex);
             }
+
         }
     }
     
