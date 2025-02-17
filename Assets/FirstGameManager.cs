@@ -1,6 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using TMPro;
+using Unity.Services.Leaderboards;
 using UnityEngine;
 
 public class FirstGameManager : MonoBehaviour
@@ -11,6 +14,8 @@ public class FirstGameManager : MonoBehaviour
 
     [SerializeField] GameManager gameManager;
     [SerializeField] Animation anim;
+
+    private readonly string leaderboardID = "Thief_Leaderboard_Dev";
 
     private void Start()
     {
@@ -42,12 +47,18 @@ public class FirstGameManager : MonoBehaviour
 
             credentialsManager.SignIn();
 
-            gameManager.mainMenu.SetActive(true);
+            if (credentialsManager.isLoginSuccessful == true)
+            {
+                UpdatePlayerNameInLeadeboard(gameManager.thiefPlayerName);
 
-            Destroy(this.gameObject, 5f);
+                gameManager.mainMenu.SetActive(true);
+                Destroy(this.gameObject, 5f);
+            }
+            else {
+                Debug.Log("Une erreur est survenue, veuillez réessayer.");
+            }
         }
     }
-
     
     IEnumerator DisplayErrorMessage()
     {
@@ -58,5 +69,28 @@ public class FirstGameManager : MonoBehaviour
 
         notifWriteName.SetActive(true);
         playerNameError.SetActive(false);
+    }
+
+    private async void UpdatePlayerNameInLeadeboard(string playerId)
+    {
+        try
+        {
+            var scoreResponse = await LeaderboardsService.Instance
+                .GetPlayerScoreAsync(
+                    leaderboardID,
+                    new GetPlayerScoreOptions { IncludeMetadata = true }
+                );
+
+            var metadata = new Dictionary<string, object>
+            {
+                { "playerId", playerId }
+            };
+            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardID, scoreResponse.Score, new AddPlayerScoreOptions { Metadata = metadata });
+            Debug.Log("Score added to leaderboard successfully.");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("An error occured. " + ex);
+        }
     }
 }

@@ -97,7 +97,7 @@ public class LeaderboardManager : MonoBehaviour
                 try
                 {
                     PlayerData playerData = JsonUtility.FromJson<PlayerData>(leaderboardEntry.Metadata);                    
-                    leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = playerData.playerId;
+                    leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = playerData.playerId;
                 }
                 catch (System.Exception e)
                 {
@@ -106,11 +106,12 @@ public class LeaderboardManager : MonoBehaviour
             }
             else
             {
-                leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerName;
+                leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerName;
             }
 
             leaderboardItem.GetChild(0).GetComponent<TextMeshProUGUI>().text = (leaderboardEntry.Rank + 1).ToString();
-            leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
+            leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerId.ToString();
+            leaderboardItem.GetChild(3).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
         }
     }
 
