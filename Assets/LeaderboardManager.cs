@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Core;
 using Unity.Services.Leaderboards.Models;
+using Newtonsoft.Json;
 
 public class LeaderboardManager : MonoBehaviour
 {
@@ -34,8 +35,8 @@ public class LeaderboardManager : MonoBehaviour
             {
                 { "playerId", playerId }
             };
-            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardID, score, new AddPlayerScoreOptions { Metadata = metadata });
-            Debug.Log("Score added to leaderboard successfully.");
+            var playerScore = await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardID, score, new AddPlayerScoreOptions { Metadata = metadata });
+            Debug.Log("Score added to leaderboard successfully. " + JsonConvert.SerializeObject(playerScore));
         }
         catch (System.Exception e)
         {

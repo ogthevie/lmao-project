@@ -1,21 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using TMPro;
-using Unity.Services.Leaderboards;
 using UnityEngine;
 
 public class FirstGameManager : MonoBehaviour
 {
     [SerializeField] GameObject playerNameError, notifWriteName;
-    public TMP_InputField playerNameInputField;
-    public CredentialsManager credentialsManager;
-
     [SerializeField] GameManager gameManager;
     [SerializeField] Animation anim;
-
-    private readonly string leaderboardID = "Thief_Leaderboard_Dev";
+    public TMP_InputField playerNameInputField;
+    public CredentialsManager credentialsManager;
 
     private void Start()
     {
@@ -45,20 +38,10 @@ public class FirstGameManager : MonoBehaviour
 
             anim.enabled = true;
 
-            try
-            {
-                await credentialsManager.SignIn();
+            await credentialsManager.SignIn();
 
-                UpdatePlayerNameInLeadeboard(gameManager.thiefPlayerName);
-
-                gameManager.mainMenu.SetActive(true);
-                Destroy(this.gameObject, 5f);
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError(ex);
-            }
-
+            gameManager.mainMenu.SetActive(true);
+            Destroy(this.gameObject, 5f);
         }
     }
     
@@ -71,28 +54,5 @@ public class FirstGameManager : MonoBehaviour
 
         notifWriteName.SetActive(true);
         playerNameError.SetActive(false);
-    }
-
-    private async void UpdatePlayerNameInLeadeboard(string playerId)
-    {
-        try
-        {
-            var scoreResponse = await LeaderboardsService.Instance
-                .GetPlayerScoreAsync(
-                    leaderboardID,
-                    new GetPlayerScoreOptions { IncludeMetadata = true }
-                );
-
-            var metadata = new Dictionary<string, object>
-            {
-                { "playerId", playerId }
-            };
-            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardID, scoreResponse.Score, new AddPlayerScoreOptions { Metadata = metadata });
-            Debug.Log("Score added to leaderboard successfully.");
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError("An error occured. " + ex);
-        }
     }
 }
