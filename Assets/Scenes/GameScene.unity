@@ -8702,7 +8702,7 @@ GameObject:
   - component: {fileID: 1472286415}
   - component: {fileID: 1472286414}
   m_Layer: 5
-  m_Name: Spiral
+  m_Name: SpiralUnity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
