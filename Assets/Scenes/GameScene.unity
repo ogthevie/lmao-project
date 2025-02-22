@@ -1102,7 +1102,6 @@ MonoBehaviour:
   anim: {fileID: 122854713}
   playerNameInputField: {fileID: 1511449949}
   credentialsManager: {fileID: 371938356}
-  leaderboardManager: {fileID: 2144594007}
 --- !u!111 &122854713
 Animation:
   m_ObjectHideFlags: 0
@@ -12091,7 +12090,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8410415836302851194, guid: 4e894598b6c603642b0b0e5bac86a3d8, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8410415836302851194, guid: 4e894598b6c603642b0b0e5bac86a3d8, type: 3}
       propertyPath: m_IsActive
