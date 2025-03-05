@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region variables
+    public readonly string leaderboardID = "Thief_Leaderboard_Dev";
     MaskManager maskManager;
     LeaderboardManager leaderboardManager;
     public AudioSource gameAudioSource;
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI statThiefName, statCallSign, statNumberOfRuns, statBestScore;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, setNameMenu, statBoard;
+    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, unityLogin, statBoard;
     [SerializeField] Button lbutton, rbutton;
 
     // Tableau des clips audio utilisés dans le jeu
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
         AddMazeChildrenToWalls();
         if(!string.IsNullOrEmpty(thiefPlayerName))
         {
-            Destroy(setNameMenu);
+            Destroy(unityLogin);
             mainMenu.SetActive(true);
         }
     }
@@ -188,7 +189,7 @@ public class GameManager : MonoBehaviour
         string thiefJson = JsonUtility.ToJson(gameData);
         string filepath = Application.persistentDataPath + "/tentativeData.json";
         System.IO.File.WriteAllText(filepath, thiefJson);
-        leaderboardManager.AddScoreToLeaderboard(thiefPlayerName, primeScore);
+        leaderboardManager.AddScoreToLeaderboard(primeScore);
     }
 
     // Charge le jeu depuis les sauvegardes

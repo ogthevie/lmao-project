@@ -19,23 +19,16 @@ public class LeaderboardManager : MonoBehaviour
     [SerializeField] private Transform leaderboardsItem;
     [SerializeField] private Transform leaderboardsContentParent;
 
-    private readonly string leaderboardID = "Thief_Leaderboard_Dev";
-
     public async void InitializeLeaderboards()
     {
         await UnityServices.InitializeAsync();
     }
 
-    public async void AddScoreToLeaderboard(string playerName, int score)
+    public async void AddScoreToLeaderboard(int score)
     {
         try
         {
-            string playerId = playerName;
-            var metadata = new Dictionary<string, object>
-            {
-                { "playerId", playerId }
-            };
-            var playerScore = await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardID, score, new AddPlayerScoreOptions { Metadata = metadata });
+            var playerScore = await LeaderboardsService.Instance.AddPlayerScoreAsync(gameManager.leaderboardID, score);
             Debug.Log("Score added to leaderboard successfully. " + JsonConvert.SerializeObject(playerScore));
         }
         catch (System.Exception e)
@@ -48,7 +41,7 @@ public class LeaderboardManager : MonoBehaviour
     {
         try
         {
-            var playerScore = await LeaderboardsService.Instance.GetPlayerScoreAsync(leaderboardID);
+            var playerScore = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
             int temprank = playerScore.Rank + 1;
             gameManager.rankOnline.text = temprank.ToString();
             gameManager.primeScore = (int)playerScore.Score;
@@ -87,39 +80,22 @@ public class LeaderboardManager : MonoBehaviour
 
     private async void FetchLeaderboardsData()
     {
-        LeaderboardScoresPage leaderboardScoresPage = await LeaderboardsService.Instance.GetScoresAsync(leaderboardID, new GetScoresOptions { IncludeMetadata = true });
+        LeaderboardScoresPage leaderboardScoresPage = await LeaderboardsService.Instance.GetScoresAsync(gameManager.leaderboardID);
 
         foreach (LeaderboardEntry leaderboardEntry in leaderboardScoresPage.Results)
         {
             Transform leaderboardItem = Instantiate(leaderboardsItem, leaderboardsContentParent);
 
-            if (!string.IsNullOrEmpty(leaderboardEntry.Metadata))
-            {
-                try
-                {
-                    PlayerData playerData = JsonUtility.FromJson<PlayerData>(leaderboardEntry.Metadata);                    
-                    leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = playerData.playerId;
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogError("Failed to parse Metadata JSON: " + e.Message);
-                }
-            }
-            else
-            {
-                leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerName;
-            }
-
             leaderboardItem.GetChild(0).GetComponent<TextMeshProUGUI>().text = (leaderboardEntry.Rank + 1).ToString();
-            leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerId.ToString();
-            leaderboardItem.GetChild(3).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
+            leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerName.ToString();
+            leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
         }
     }
 
     public async void GetMyData()
     {
-        var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(leaderboardID);
-        gameManager.statCallSign.text = myPlayerData.PlayerName.ToString();
+        var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
+        gameManager.statThiefName.text = myPlayerData.PlayerName.ToString();
         gameManager.statBestScore.text = myPlayerData.Score.ToString();
     }
 }

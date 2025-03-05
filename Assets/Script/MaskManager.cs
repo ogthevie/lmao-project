@@ -38,24 +38,9 @@ public class MaskManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) 
     {
-        if(other.gameObject.layer == 6 && gameManager.wallOnFire)
-        {
-
-            transform.GetChild(0).gameObject.SetActive(false);
-            // Affiche l'interface utilisateur de mort
-            deadUI.SetActive(true);
-
-            // Arrête et joue un son de mort
-            gameManager.gameAudioSource.Stop();
-            gameManager.gameAudioSource.loop = false;
-            gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[2]);
-            gameManager.runs += 1;
-            // Sauvegarde la tentative de jeu
-            gameManager.SaveGame();
-
-            // Arrête le temps dans le jeu
-            Time.timeScale = 0;
-        }     
+        if(other.gameObject.layer == 6 && gameManager.wallOnFire) DeadProtocolCollisionLayer();
+        else if(other.gameObject.layer == 9) DeadProtocolCollisionLayer();
+    
     }
 
     // Méthode native appelée à chaque frame, ne necessite pas de réferencement
@@ -65,6 +50,24 @@ public class MaskManager : MonoBehaviour
         
         /*if(gameManager.isControllerConnected)AnalogJoystickWalk();
         else*/ VirtualJoystickWalk();
+    }
+
+    void DeadProtocolCollisionLayer()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+        // Affiche l'interface utilisateur de mort
+        deadUI.SetActive(true);
+
+        // Arrête et joue un son de mort
+        gameManager.gameAudioSource.Stop();
+        gameManager.gameAudioSource.loop = false;
+        gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[2]);
+        gameManager.runs += 1;
+        // Sauvegarde la tentative de jeu
+        gameManager.SaveGame();
+
+        // Arrête le temps dans le jeu
+        Time.timeScale = 0;        
     }
 
     // Méthode native appelée à des intervalles de temps fixes, ne necessite pas de réferencement
