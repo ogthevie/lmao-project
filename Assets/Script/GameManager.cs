@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region variables
-    public readonly string leaderboardID = "Thief_Leaderboard_Dev";
+    public readonly string leaderboardID = "Thief_Leaderboard";
     MaskManager maskManager;
     LeaderboardManager leaderboardManager;
     public AudioSource gameAudioSource;
