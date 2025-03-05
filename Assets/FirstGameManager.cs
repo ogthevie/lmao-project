@@ -18,6 +18,7 @@ public class FirstGameManager : MonoBehaviour
 
         var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
         gameManager.thiefPlayerName = myPlayerData.PlayerName.ToString();
+        gameManager.SaveGame();
 
         gameManager.mainMenu.SetActive(true);
         Destroy(gameManager.unityLogin, 1.5f);
