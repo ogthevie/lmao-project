@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Services.Leaderboards;
-using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Core;
 using Unity.Services.Leaderboards.Models;
@@ -26,6 +25,7 @@ public class LeaderboardManager : MonoBehaviour
 
     public async void AddScoreToLeaderboard(int score)
     {
+        Debug.Log(gameManager.leaderboardID);
         try
         {
             var playerScore = await LeaderboardsService.Instance.AddPlayerScoreAsync(gameManager.leaderboardID, score);

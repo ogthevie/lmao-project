@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region variables
-    public readonly string leaderboardID = "Thief_Leaderboard";
+    public string leaderboardID;
     MaskManager maskManager;
     LeaderboardManager leaderboardManager;
     public AudioSource gameAudioSource;
@@ -34,19 +34,26 @@ public class GameManager : MonoBehaviour
     public bool canPlay, OnPause, wallOnFire, wallOnMove, isControllerConnected;
     [SerializeField] Color dynamicWall = new Color(0.90f, 0.09f, 0.05f);
     [SerializeField] Color staticWall = new Color(0.04f, 0.1f, 0.30f);
-    public string thiefPlayerName;
+    public string dotroidPlayerName;
 
     #endregion
 
     void Awake()
     {
+        #if UNITY_EDITOR
+        leaderboardID = "Thief_Leaderboard_Dev";
+        #else
+        leaderboardID = "Thief_Leaderboard";
+        #endif
+
         gameAudioSource = GetComponent<AudioSource>();
         maskManager = FindFirstObjectByType<MaskManager>();
         leaderboardManager = GetComponent<LeaderboardManager>();
         //ClearAllSaves();
         LoadGame();
+        print(dotroidPlayerName);
         AddMazeChildrenToWalls();
-        if(!string.IsNullOrEmpty(thiefPlayerName))
+        if(!string.IsNullOrEmpty(dotroidPlayerName))
         {
             Destroy(unityLogin);
             mainMenu.SetActive(true);
@@ -181,11 +188,12 @@ public class GameManager : MonoBehaviour
         GameData gameData = new GameData
         {
             scoreData = primeScore,
-            nameData = thiefPlayerName,
+            nameData = dotroidPlayerName,
             runData = runs,
             
         };
 
+        print("sauvegarde est " +gameData.nameData);
         string thiefJson = JsonUtility.ToJson(gameData);
         string filepath = Application.persistentDataPath + "/tentativeData.json";
         System.IO.File.WriteAllText(filepath, thiefJson);
@@ -202,7 +210,7 @@ public class GameManager : MonoBehaviour
             GameData gameData = JsonUtility.FromJson<GameData>(thiefJson);
             
             primeScore = gameData.scoreData;
-            thiefPlayerName = gameData.nameData;
+            dotroidPlayerName = gameData.nameData;
             runs = gameData.runData;
             Debug.Log("Donnee chargees");
         }
@@ -210,7 +218,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateRanked()
     {
-        leaderboardManager.GetPlayerRank(thiefPlayerName);
+        leaderboardManager.GetPlayerRank(dotroidPlayerName);
     }
 
     public void OpenStatsBoard()
@@ -228,7 +236,7 @@ public class GameManager : MonoBehaviour
     {
         leaderboardManager.GetMyData();
         statNumberOfRuns.text = runs.ToString();
-        statThiefName.text = thiefPlayerName;
+        statThiefName.text = dotroidPlayerName;
 
     }
 
