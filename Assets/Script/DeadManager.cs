@@ -26,6 +26,7 @@ public class DeadManager : MonoBehaviour
     // Méthode native appelée lorsque l'objet devient actif, ne nécessite pas de réferencement
     private void OnEnable()
     {   
+
         // Désactive le comptage de score dans MaskManager
         maskManager.canCount = false;
 

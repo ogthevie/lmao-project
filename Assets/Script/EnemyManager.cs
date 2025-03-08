@@ -106,8 +106,11 @@ public class EnemyManager : MonoBehaviour
             gameManager.gameAudioSource.loop = false;
             gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[2]);
             gameManager.runs += 1;
-            // Sauvegarde la tentative de jeu
+            
+            //sauvegarde jeu
+            gameManager.leaderboardManager.SaveOnline();
             gameManager.SaveGame();
+
 
             // Arrête le temps dans le jeu
             Time.timeScale = 0;

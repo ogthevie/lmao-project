@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Services.Core;
 using Unity.Services.Leaderboards.Models;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 public class LeaderboardManager : MonoBehaviour
 {
@@ -18,14 +19,16 @@ public class LeaderboardManager : MonoBehaviour
     [SerializeField] private Transform leaderboardsItem;
     [SerializeField] private Transform leaderboardsContentParent;
 
-    public async void InitializeLeaderboards()
+    public void InitializeLeaderboards()
     {
-        await UnityServices.InitializeAsync();
+        UnityServices.InitializeAsync();
+        #if UNITY_EDITOR
+        Debug.Log("service leadeboard initialisés");
+        #endif
     }
 
-    public async void AddScoreToLeaderboard(int score)
+    public async Task AddScoreToLeaderboard(int score)
     {
-        Debug.Log(gameManager.leaderboardID);
         try
         {
             var playerScore = await LeaderboardsService.Instance.AddPlayerScoreAsync(gameManager.leaderboardID, score);
@@ -42,16 +45,35 @@ public class LeaderboardManager : MonoBehaviour
         try
         {
             var playerScore = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
-            int temprank = playerScore.Rank + 1;
-            gameManager.rankOnline.text = temprank.ToString();
-            gameManager.primeScore = (int)playerScore.Score;
-            gameManager.primeScoreVisual.text = playerScore.Score.ToString();
-            Debug.Log($"{playerName} est classé {gameManager.rankOnline.text} ème.");
+            if(playerScore != null)
+            {
+                int temprank = playerScore.Rank + 1;
+                gameManager.rankOnline.text = temprank.ToString();
+                gameManager.primeScore = (int)playerScore.Score;
+                gameManager.primeScoreVisual.text = playerScore.Score.ToString();
+            }
+
         }
         catch (System.Exception e)
         {
             Debug.LogError("Erreur lors de la récupération du rang du joueur : " + e.Message);
         }
+    }
+
+    public async void SaveOnline()
+    {
+        try
+        {
+            await AddScoreToLeaderboard(gameManager.primeScore);
+            var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
+            
+            gameManager.dotroidPlayerName = myPlayerData.PlayerName.ToString();    
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Erreur lors de la sauvegarde du joueur : " + e.Message);            
+        }
+    
     }
 
 

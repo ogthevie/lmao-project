@@ -40,16 +40,19 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        #if UNITY_EDITOR
-        leaderboardID = "Dotroid_Leaderboard_Dev";
-        #else
+        //#if UNITY_EDITOR
+        //leaderboardID = "Dotroid_Leaderboard_Dev";
+        //#else
         leaderboardID = "Dotroid_Leaderboard"; 
-        #endif
+        //#endif
 
         gameAudioSource = GetComponent<AudioSource>();
         maskManager = FindFirstObjectByType<MaskManager>();
         leaderboardManager = GetComponent<LeaderboardManager>();
         //ClearAllSaves();
+    }
+    void Start()
+    {
         LoadGame();
         AddMazeChildrenToWalls();
         if(!string.IsNullOrEmpty(dotroidPlayerName))
@@ -58,20 +61,13 @@ public class GameManager : MonoBehaviour
             mainMenu.SetActive(true);
         }
     }
-    
     void Update()
     {
         if(!canPlay) return;
 
         float delta = Time.deltaTime;
         if(!maskManager.isdead) HandleTimer(delta);
-        //Debug.Log(timer);
     }
-
-    /*private void FixedUpdate()
-    {
-        CheckForGamePad();    
-    }*/
 
     // Gère le chronomètre du jeu
     void HandleTimer(float delta)
@@ -121,7 +117,6 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator HandleTransition()
     {
-        UpdateRanked();
         gameAudioSource.PlayOneShot(audioClips[1]);
         yield return new WaitForSeconds(1f);
         transitionScreen.SetActive(true);
@@ -131,6 +126,7 @@ public class GameManager : MonoBehaviour
         transitionScreen.SetActive(false);
         canPlay = true;
         LoadGame();
+        UpdateRanked();
         //ReloadMainTheme();
     }
 
@@ -192,11 +188,10 @@ public class GameManager : MonoBehaviour
             
         };
 
-        print("sauvegarde est " +gameData.nameData);
         string thiefJson = JsonUtility.ToJson(gameData);
         string filepath = Application.persistentDataPath + "/tentativeData.json";
         System.IO.File.WriteAllText(filepath, thiefJson);
-        leaderboardManager.AddScoreToLeaderboard(primeScore);
+
     }
 
     // Charge le jeu depuis les sauvegardes
@@ -211,7 +206,9 @@ public class GameManager : MonoBehaviour
             primeScore = gameData.scoreData;
             dotroidPlayerName = gameData.nameData;
             runs = gameData.runData;
-            Debug.Log("Donnee chargees");
+            #if UNITY_EDITOR
+            Debug.Log("Donnee chargees, ton callsign est: " + dotroidPlayerName);
+            #endif
         }
     }
 
@@ -264,45 +261,20 @@ public class GameManager : MonoBehaviour
             foreach (string file in saveFiles)
             {
                 System.IO.File.Delete(file);
+                #if UNITY_EDITOR
                 Debug.Log("Fichier supprimé : " + file);
+                #endif
             }
 
+            #if UNITY_EDITOR
             Debug.Log("Toutes les sauvegardes ont été effacées.");
+            #endif
         }
         catch (Exception e)
         {
             Debug.LogError("Erreur lors de la suppression des sauvegardes : " + e.Message);
         }
     }
-    /*private void CheckForGamePad()
-    {
-        string[] joystickNames = Input.GetJoystickNames();
-
-        if(joystickNames.Length == 0)
-        {
-            //Debug.Log("Manette déconnectée");
-            //needGamepad.enabled = true;
-            //Time.timeScale = 0;
-            isControllerConnected = false;            
-        }
-
-        if (joystickNames.Length > 0 && !string.IsNullOrEmpty(joystickNames[0]))
-        {
-            if (!isControllerConnected)
-            {
-                Debug.Log("Manette connectée : " + joystickNames[0]);
-                isControllerConnected = true;
-            }
-        }
-        else
-        {
-            if (isControllerConnected)
-            {
-                //Debug.Log("Manette déconnectée");
-                isControllerConnected = false;
-            }
-        }
-    }*/
 
 
     class GameData

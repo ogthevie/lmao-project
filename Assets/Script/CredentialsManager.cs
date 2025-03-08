@@ -13,21 +13,26 @@ public class CredentialsManager : MonoBehaviour
         await UnityServices.InitializeAsync();
         PlayerAccountService.Instance.SignedIn += SignInWithUnity;
         await SignInCachedUser();
-        leaderboardManager.InitializeLeaderboards();
+        leaderboardManager.InitializeLeaderboards(); 
+
     }
 
     async void SignInWithUnity()
     {
         if (AuthenticationService.Instance.IsSignedIn)
         {
+            #if UNITY_EDITOR
             Debug.Log("L'utilisateur est déjà connecté.");
+            #endif
             return;
         }
 
         try
         {
             await AuthenticationService.Instance.SignInWithUnityAsync(PlayerAccountService.Instance.AccessToken);
+            #if UNITY_EDITOR
             Debug.Log("Connexion réussie avec Unity.");
+            #endif
         }
         catch (RequestFailedException ex)
         {
