@@ -9,10 +9,11 @@ public class FirstGameManager : MonoBehaviour
 
     public async void FirstStartGame()
     {
-        gameManager.primeScore = 0;
+        gameManager.primeScore = 1;
 
         await credentialsManager.SignIn();
 
+        gameManager.leaderboardManager.AddScoreToLeaderboard(gameManager.primeScore);
         var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
         gameManager.dotroidPlayerName = myPlayerData.PlayerName.ToString();
 

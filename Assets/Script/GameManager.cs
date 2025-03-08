@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     #region variables
     public string leaderboardID;
     MaskManager maskManager;
-    LeaderboardManager leaderboardManager;
+    public LeaderboardManager leaderboardManager;
     public AudioSource gameAudioSource;
 
     // Références aux éléments UI pour afficher le chronomètre et le score
@@ -41,9 +41,9 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         #if UNITY_EDITOR
-        leaderboardID = "Thief_Leaderboard_Dev";
+        leaderboardID = "Dotroid_Leaderboard_Dev";
         #else
-        leaderboardID = "Thief_Leaderboard";
+        leaderboardID = "Dotroid_Leaderboard"; 
         #endif
 
         gameAudioSource = GetComponent<AudioSource>();
@@ -51,7 +51,6 @@ public class GameManager : MonoBehaviour
         leaderboardManager = GetComponent<LeaderboardManager>();
         //ClearAllSaves();
         LoadGame();
-        print(dotroidPlayerName);
         AddMazeChildrenToWalls();
         if(!string.IsNullOrEmpty(dotroidPlayerName))
         {
