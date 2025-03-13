@@ -303,6 +303,8 @@ public class GameManager : MonoBehaviour
         await AuthenticationService.Instance.DeleteAccountAsync();
         CloseSettingsConfirmationMenu();
         CloseSettingsMenu();
+        ClearAllSaves();
+        ExitGame();
     }
 
     class GameData
