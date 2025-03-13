@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Unity.Services.Authentication;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI statThiefName, statCallSign, statNumberOfRuns, statBestScore;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, unityLogin, statBoard;
+    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, unityLogin, statBoard, settingsMenu, confirmDeleteMenu;
     [SerializeField] Button lbutton, rbutton;
 
     // Tableau des clips audio utilisés dans le jeu
@@ -276,6 +277,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void OpenSettingsMenu()
+    {
+        settingsMenu.SetActive(true);
+    }
+
+    public void CloseSettingsMenu()
+    {
+        settingsMenu.SetActive(false);
+        CloseSettingsConfirmationMenu();
+    }
+
+    public void OpenSettingsConfirmationMenu()
+    {
+        confirmDeleteMenu.SetActive(true);
+    }
+
+    public void CloseSettingsConfirmationMenu()
+    {
+        confirmDeleteMenu.SetActive(false);
+    }
+
+    public async void DeleteUnityAccount()
+    {
+        await AuthenticationService.Instance.DeleteAccountAsync();
+        CloseSettingsConfirmationMenu();
+        CloseSettingsMenu();
+    }
 
     class GameData
     {
