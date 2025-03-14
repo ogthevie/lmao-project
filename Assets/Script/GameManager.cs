@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     // Références aux éléments UI pour afficher le chronomètre et le score
     public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline;
 
-    public TextMeshProUGUI statThiefName, statCallSign, statNumberOfRuns, statBestScore;
+    public TextMeshProUGUI statThiefName, statNumberOfRuns, statBestScore;
 
     // Références aux différents éléments UI
     public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, unityLogin, statBoard, settingsMenu, confirmDeleteMenu;
