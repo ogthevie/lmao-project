@@ -33,7 +33,7 @@ public class DeadManager : MonoBehaviour
         // Affiche le message de trash talk en fonction du temps écoulé
         if(gameManager.timer < 20f)
         {
-            int index = Random.Range(0,8);
+            int index = Random.Range(0,9);
             trashTalkDead.text = texts[index];
         }
     }

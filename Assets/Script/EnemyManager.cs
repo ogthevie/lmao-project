@@ -56,7 +56,11 @@ public class EnemyManager : MonoBehaviour
     // Vérifie la distance entre l'ennemi et la cible pour activer l'icône du chasseur
     void CheckDistance()
     {
-        if(gameManager.timer >= timerActiveself || distanceTarget < 0.65f) iconHunter.SetActive(true);
+        if(gameManager.timer >= timerActiveself || distanceTarget < 0.65f)
+        {
+            gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[6]);
+            iconHunter.SetActive(true);
+        }
     }
 
     // Ajuste la vitesse de l'agent en fonction du temps écoulé

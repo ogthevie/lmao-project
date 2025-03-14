@@ -277,23 +277,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OpenSettingsMenu()
+    public void OpenDeleteMenu()
     {
         settingsMenu.SetActive(true);
     }
 
-    public void CloseSettingsMenu()
+    public void CloseDeleteMenu()
     {
         settingsMenu.SetActive(false);
-        CloseSettingsConfirmationMenu();
+        CloseDeleteConfirmationMenu();
     }
 
-    public void OpenSettingsConfirmationMenu()
+    public void OpenDeleteConfirmationMenu()
     {
         confirmDeleteMenu.SetActive(true);
     }
 
-    public void CloseSettingsConfirmationMenu()
+    public void CloseDeleteConfirmationMenu()
     {
         confirmDeleteMenu.SetActive(false);
     }
@@ -301,10 +301,20 @@ public class GameManager : MonoBehaviour
     public async void DeleteUnityAccount()
     {
         await AuthenticationService.Instance.DeleteAccountAsync();
-        CloseSettingsConfirmationMenu();
-        CloseSettingsMenu();
+        CloseDeleteConfirmationMenu();
+        CloseDeleteMenu();
         ClearAllSaves();
         ExitGame();
+    }
+
+    public void playOpenSound()
+    {
+        gameAudioSource.PlayOneShot(audioClips[4]);
+    }
+
+    public void ClickSound()
+    {
+        gameAudioSource.PlayOneShot(audioClips[5]);
     }
 
     class GameData
