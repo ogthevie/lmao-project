@@ -71,6 +71,7 @@ public class SkillManager : MonoBehaviour
     public void HandleFlyingThunder()
     { 
         maskManager.transform.position = new Vector3(xPos, maskManager.transform.position.y, zPos);
+        gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[7]);
         xPos = zPos = 0f;
         currentTime = 0f;
         flyThunderFx.Play();
