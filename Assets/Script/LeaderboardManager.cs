@@ -19,6 +19,7 @@ public class LeaderboardManager : MonoBehaviour
     [SerializeField] private Transform leaderboardsItem;
     [SerializeField] private Transform leaderboardsContentParent;
     [SerializeField] RectTransform leaderBoardTableUI;
+    [SerializeField] TextMeshProUGUI myRank, myName, myID, myScore;
 
     public async Task AddScoreToLeaderboard(int score)
     {
@@ -72,6 +73,7 @@ public class LeaderboardManager : MonoBehaviour
     {
         ClearLeaderboardsItems();
         FetchLeaderboardsData();
+        FetchMyLeaderboardData();
         leaderBoardUI.SetActive(true);
     }
 
@@ -112,6 +114,16 @@ public class LeaderboardManager : MonoBehaviour
             leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerId.ToString();
             leaderboardItem.GetChild(3).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
         }
+    }
+
+    private async void FetchMyLeaderboardData()
+    {
+        var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
+        myRank.text = (myPlayerData.Rank + 1).ToString();
+        myName.text = RemoveAfterHash(myPlayerData.PlayerName.ToString());
+        myID.text =  myPlayerData.PlayerId.ToString();
+        myScore.text = myPlayerData.Score.ToString();
+
     }
 
     string RemoveAfterHash(string input)

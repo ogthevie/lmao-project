@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     // Timer pour suivre le temps écoulé
     public float timer;
     // Indicateur pour savoir si le jeu peut être joué
-    public bool canPlay, OnPause, wallOnFire, wallOnMove, isControllerConnected;
+    public bool canPlay, OnPause, wallOnFire, wallOnMove;
     [SerializeField] Color dynamicWall = new Color(0.90f, 0.09f, 0.05f);
     [SerializeField] Color staticWall = new Color(0.04f, 0.1f, 0.30f);
     public string dotroidPlayerName;
