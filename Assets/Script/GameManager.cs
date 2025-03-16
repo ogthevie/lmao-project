@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.7f);
         transitionScreen.SetActive(false);
         canPlay = true;
+        maskManager.dotroidThemeAudioSource.enabled = true;
         LoadGame();
         UpdateRanked();
         //ReloadMainTheme();

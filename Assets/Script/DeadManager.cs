@@ -29,6 +29,7 @@ public class DeadManager : MonoBehaviour
 
         // Désactive le comptage de score dans MaskManager
         maskManager.canCount = false;
+        maskManager.dotroidThemeAudioSource.enabled = false;
 
         // Affiche le message de trash talk en fonction du temps écoulé
         if(gameManager.timer < 20f)
@@ -43,6 +44,7 @@ public class DeadManager : MonoBehaviour
     {
         // Reactive le comptage de score dans MaskManager
         maskManager.canCount = true;
+        maskManager.dotroidThemeAudioSource.enabled = true;
     }
 
     void Start()

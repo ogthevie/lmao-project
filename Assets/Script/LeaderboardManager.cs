@@ -106,7 +106,6 @@ public class LeaderboardManager : MonoBehaviour
         var options = new GetScoresOptions { Limit = 100 };
         LeaderboardScoresPage leaderboardScoresPage = await LeaderboardsService.Instance.GetScoresAsync(gameManager.leaderboardID, options);
 
-        Debug.Log(leaderboardScoresPage.Results.Count);
         int nbLines = leaderboardScoresPage.Results.Count + 1;
         if(leaderboardScoresPage.Results.Count > 7)
         {

@@ -23,6 +23,7 @@ public class MaskManager : MonoBehaviour
     private Rigidbody rb;
 
     // Référence au GameObject pour l'effet de traînée
+    public AudioSource dotroidThemeAudioSource;
 
     #endregion
 
