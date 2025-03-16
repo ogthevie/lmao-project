@@ -18,6 +18,7 @@ public class LeaderboardManager : MonoBehaviour
     public GameObject leaderBoardUI;
     [SerializeField] private Transform leaderboardsItem;
     [SerializeField] private Transform leaderboardsContentParent;
+    [SerializeField] RectTransform leaderBoardTableUI;
 
     public void InitializeLeaderboards()
     {
@@ -102,22 +103,32 @@ public class LeaderboardManager : MonoBehaviour
 
     private async void FetchLeaderboardsData()
     {
-        LeaderboardScoresPage leaderboardScoresPage = await LeaderboardsService.Instance.GetScoresAsync(gameManager.leaderboardID);
+        var options = new GetScoresOptions { Limit = 100 };
+        LeaderboardScoresPage leaderboardScoresPage = await LeaderboardsService.Instance.GetScoresAsync(gameManager.leaderboardID, options);
 
+        Debug.Log(leaderboardScoresPage.Results.Count);
+        int nbLines = leaderboardScoresPage.Results.Count + 1;
+        if(leaderboardScoresPage.Results.Count > 7)
+        {
+            int height = 52 + (nbLines * 52);
+            leaderBoardTableUI.sizeDelta = new Vector2 (0, height);
+        } 
+
+        
         foreach (LeaderboardEntry leaderboardEntry in leaderboardScoresPage.Results)
         {
             Transform leaderboardItem = Instantiate(leaderboardsItem, leaderboardsContentParent);
 
             leaderboardItem.GetChild(0).GetComponent<TextMeshProUGUI>().text = (leaderboardEntry.Rank + 1).ToString();
             leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerName.ToString();
-            leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
+            leaderboardItem.GetChild(3).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
         }
     }
 
     public async void GetMyData()
     {
         var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
-        gameManager.statThiefName.text = myPlayerData.PlayerName.ToString();
+        gameManager.statDotroidName.text = myPlayerData.PlayerName.ToString();
         gameManager.statBestScore.text = myPlayerData.Score.ToString();
     }
 }

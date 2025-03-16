@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     // Références aux éléments UI pour afficher le chronomètre et le score
     public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline;
 
-    public TextMeshProUGUI statThiefName, statNumberOfRuns, statBestScore;
+    public TextMeshProUGUI statDotroidName, statNumberOfRuns, statBestScore;
 
     // Références aux différents éléments UI
     public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, unityLogin, statBoard, settingsMenu, confirmDeleteMenu;
@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
 
         gameAudioSource = GetComponent<AudioSource>();
         maskManager = FindFirstObjectByType<MaskManager>();
-        leaderboardManager = GetComponent<LeaderboardManager>();
+        leaderboardManager = FindFirstObjectByType<LeaderboardManager>();
         //ClearAllSaves();
     }
     void Start()
@@ -233,7 +233,7 @@ public class GameManager : MonoBehaviour
     {
         leaderboardManager.GetMyData();
         statNumberOfRuns.text = runs.ToString();
-        statThiefName.text = dotroidPlayerName;
+        statDotroidName.text = dotroidPlayerName;
 
     }
 
