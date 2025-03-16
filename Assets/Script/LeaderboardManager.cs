@@ -20,14 +20,6 @@ public class LeaderboardManager : MonoBehaviour
     [SerializeField] private Transform leaderboardsContentParent;
     [SerializeField] RectTransform leaderBoardTableUI;
 
-    public void InitializeLeaderboards()
-    {
-        UnityServices.InitializeAsync();
-        #if UNITY_EDITOR
-        Debug.Log("service leadeboard initialisés");
-        #endif
-    }
-
     public async Task AddScoreToLeaderboard(int score)
     {
         try
@@ -74,9 +66,7 @@ public class LeaderboardManager : MonoBehaviour
         {
             Debug.LogError("Erreur lors de la sauvegarde du joueur : " + e.Message);            
         }
-    
     }
-
 
     public void OpenLeaderBoardMenuAsync()
     {
@@ -113,21 +103,31 @@ public class LeaderboardManager : MonoBehaviour
             leaderBoardTableUI.sizeDelta = new Vector2 (0, height);
         } 
 
-        
         foreach (LeaderboardEntry leaderboardEntry in leaderboardScoresPage.Results)
         {
             Transform leaderboardItem = Instantiate(leaderboardsItem, leaderboardsContentParent);
 
             leaderboardItem.GetChild(0).GetComponent<TextMeshProUGUI>().text = (leaderboardEntry.Rank + 1).ToString();
-            leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerName.ToString();
+            leaderboardItem.GetChild(1).GetComponent<TextMeshProUGUI>().text = RemoveAfterHash(leaderboardEntry.PlayerName.ToString());
+            leaderboardItem.GetChild(2).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.PlayerId.ToString();
             leaderboardItem.GetChild(3).GetComponent<TextMeshProUGUI>().text = leaderboardEntry.Score.ToString();
         }
+    }
+
+    string RemoveAfterHash(string input)
+    {
+        int hashIndex = input.IndexOf('#');
+        
+        if (hashIndex == -1)
+            return input;
+        
+        return input[..hashIndex];
     }
 
     public async void GetMyData()
     {
         var myPlayerData = await LeaderboardsService.Instance.GetPlayerScoreAsync(gameManager.leaderboardID);
-        gameManager.statDotroidName.text = myPlayerData.PlayerName.ToString();
+        gameManager.statDotroidName.text = RemoveAfterHash(myPlayerData.PlayerName.ToString());
         gameManager.statBestScore.text = myPlayerData.Score.ToString();
     }
 }

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Unity.Services.Authentication;
+using System.Text.RegularExpressions;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,15 +13,14 @@ public class GameManager : MonoBehaviour
     public string leaderboardID;
     MaskManager maskManager;
     public LeaderboardManager leaderboardManager;
+    public CredentialsManager credentialsManager;
     public AudioSource gameAudioSource;
 
     // Références aux éléments UI pour afficher le chronomètre et le score
-    public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline;
-
-    public TextMeshProUGUI statDotroidName, statNumberOfRuns, statBestScore;
+    public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline, statDotroidName, statNumberOfRuns, statBestScore, nameErrorText;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, unityLogin, statBoard, settingsMenu, confirmDeleteMenu;
+    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, statBoard, settingsMenu, confirmDeleteMenu, updateNameMenu;
     [SerializeField] Button lbutton, rbutton;
 
     // Tableau des clips audio utilisés dans le jeu
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     void Awake()
-    {
+    {        
         //#if UNITY_EDITOR
         //leaderboardID = "Dotroid_Leaderboard_Dev";
         //#else
@@ -56,11 +56,6 @@ public class GameManager : MonoBehaviour
     {
         LoadGame();
         AddMazeChildrenToWalls();
-        if(!string.IsNullOrEmpty(dotroidPlayerName))
-        {
-            Destroy(unityLogin);
-            mainMenu.SetActive(true);
-        }
     }
     void Update()
     {
@@ -235,7 +230,6 @@ public class GameManager : MonoBehaviour
         leaderboardManager.GetMyData();
         statNumberOfRuns.text = runs.ToString();
         statDotroidName.text = dotroidPlayerName;
-
     }
 
     public void ExitGame()
@@ -278,6 +272,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void OpenPlayerNameMenu()
+    {
+        AssignPlayerName();
+
+        updateNameMenu.SetActive(true);
+    }
+
+    public void ClosePlayerNameMenu()
+    {
+        updateNameMenu.SetActive(false);
+        nameErrorText.text = "";
+    }
+
     public void OpenDeleteMenu()
     {
         settingsMenu.SetActive(true);
@@ -316,6 +323,68 @@ public class GameManager : MonoBehaviour
     public void ClickSound()
     {
         gameAudioSource.PlayOneShot(audioClips[5]);
+    }
+
+    async void AssignPlayerName()
+    {
+        var playerName = await AuthenticationService.Instance.GetPlayerNameAsync();
+
+        credentialsManager.nameInput.text = RemoveAfterHash(playerName);
+    }
+
+    public async void UpdatePlayerName()
+    {
+        if (!HasCorrectCharacterCount(credentialsManager.nameInput.text))
+        {
+            nameErrorText.text = "Minimum 3 characters & maximum 15 characters allowed.";
+        }
+        if (ContainsSpaces(credentialsManager.nameInput.text))
+        {
+            nameErrorText.text = "No spaces allowed !";
+        }
+        else if (ContainsPunctuation(credentialsManager.nameInput.text))
+        {
+            nameErrorText.text = "No punctuation is allowed !";
+        }
+
+        if (!ContainsSpaces(credentialsManager.nameInput.text) && !ContainsPunctuation(credentialsManager.nameInput.text) && HasCorrectCharacterCount(credentialsManager.nameInput.text))
+        {
+            try
+            {
+                await AuthenticationService.Instance.UpdatePlayerNameAsync(credentialsManager.nameInput.text);
+                nameErrorText.text = "PlayerName updated successfully.";
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Error updating PlayerName: " + ex);
+            }
+        }
+    }
+
+    bool HasCorrectCharacterCount(string input)
+    {
+        Debug.Log("Input is " + input + " and size is " + input.Length);
+        return input.Length >= 3 && input.Length <= 15;
+    }
+
+    bool ContainsSpaces(string input)
+    {
+        return input.Contains(" ");
+    }
+
+    bool ContainsPunctuation(string input)
+    {
+        return Regex.IsMatch(input, @"[#.,!?;:'""(){}[\]\\/-]"); 
+    }
+
+    string RemoveAfterHash(string input)
+    {
+        int hashIndex = input.IndexOf('#');
+        
+        if (hashIndex == -1)
+            return input;
+        
+        return input[..hashIndex];
     }
 
     class GameData

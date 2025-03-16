@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Authentication.PlayerAccounts;
 using Unity.Services.Core;
@@ -7,14 +9,13 @@ using UnityEngine;
 public class CredentialsManager : MonoBehaviour
 {
     public LeaderboardManager leaderboardManager;
+    public GameObject unityLogin, mainMenu;
+    public TMP_InputField nameInput;
 
     async void Awake()
     {
         await UnityServices.InitializeAsync();
         PlayerAccountService.Instance.SignedIn += SignInWithUnity;
-        await SignInCachedUser();
-        leaderboardManager.InitializeLeaderboards(); 
-
     }
 
     async void SignInWithUnity()
@@ -24,12 +25,16 @@ public class CredentialsManager : MonoBehaviour
             #if UNITY_EDITOR
             Debug.Log("L'utilisateur est déjà connecté.");
             #endif
+
+            Destroy(unityLogin, 1.5f);
             return;
         }
 
         try
         {
             await AuthenticationService.Instance.SignInWithUnityAsync(PlayerAccountService.Instance.AccessToken);
+
+            Destroy(unityLogin, 1.5f);
             #if UNITY_EDITOR
             Debug.Log("Connexion réussie avec Unity.");
             #endif
@@ -40,21 +45,22 @@ public class CredentialsManager : MonoBehaviour
         }
     }
 
-    void SignOutWithUnity()
-    {
-        PlayerAccountService.Instance.SignOut();
-    }
-
-    async Task SignInCachedUser()
+    public async Task SignInCachedUser()
     {
         if (!AuthenticationService.Instance.SessionTokenExists)
         {
+            Debug.Log("Session token doesn't exist.");
             return;
         }
 
         try
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+            mainMenu.SetActive(true);
+            Destroy(unityLogin, 1.5f);
+
+            await GetPlayerName();
         }
         catch (AuthenticationException ex)
         {
@@ -68,12 +74,6 @@ public class CredentialsManager : MonoBehaviour
 
     public async Task SignIn()
     {
-        if (PlayerAccountService.Instance.IsSignedIn)
-        {
-            SignInWithUnity();
-            return;
-        }
-
         try
         {
             await PlayerAccountService.Instance.StartSignInAsync();
@@ -84,8 +84,27 @@ public class CredentialsManager : MonoBehaviour
         }
     }
 
-    public void SignOut()
+    string RemoveAfterHash(string input)
     {
-        SignOutWithUnity();
+        int hashIndex = input.IndexOf('#');
+        
+        if (hashIndex == -1)
+            return input;
+        
+        return input[..hashIndex];
+    }
+
+    public async Task GetPlayerName()
+    {
+        try
+        {
+            var playerName = await AuthenticationService.Instance.GetPlayerNameAsync();
+
+            nameInput.text = RemoveAfterHash(playerName);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error getting PlayerName: " + ex);
+        }
     }
 }
