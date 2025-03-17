@@ -77,6 +77,7 @@ public class DeadManager : MonoBehaviour
             mask.SetActive(true);
             gameManager.LoadGame();
             gameManager.UpdateRanked();
+            gameManager.phase.SetActive(false);
             this.gameObject.SetActive(false);
     }
 }
