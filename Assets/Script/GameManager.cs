@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline, statDotroidName, statNumberOfRuns, statBestScore, nameErrorText;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftButton, rightButton, leftControl, rightControl, pauseMenu, maze, statBoard, settingsMenu, confirmDeleteMenu, updateNameMenu, phase;
+    public GameObject mainMenu, transitionScreen, leftZone, rightZone, switchLeft, switchRight, leftControl, rightControl, pauseMenu, maze, statBoard, settingsMenu, confirmDeleteMenu, updateNameMenu, phase;
     [SerializeField] Button lbutton, rbutton;
 
     // Tableau des clips audio utilisés dans le jeu
@@ -76,10 +76,9 @@ public class GameManager : MonoBehaviour
             chronoVisual.text = Mathf.Ceil(timer).ToString();
 
 
-            if(!wallOnMove && score >= 50f) 
+            if(score >= 50f) 
             {
                 phase.SetActive(true);
-                wallOnMove = true;
                 WallMoveTheme();
             }
             if(!wallOnFire && score >= 200f) HandleWallOnFire();
@@ -125,13 +124,21 @@ public class GameManager : MonoBehaviour
         maskManager.dotroidThemeAudioSource.enabled = true;
         LoadGame();
         UpdateRanked();
-        //ReloadMainTheme();
     }
 
     public void WallMoveTheme()
     {
         gameAudioSource.Play();
         gameAudioSource.loop = true;
+        // Activer les oscillations pour tous les murs
+        foreach (GameObject wall in walls)
+        {
+            var oscillationManager = wall.GetComponent<OscillationManager>();
+            if (oscillationManager != null)
+            {
+                oscillationManager.StartOscillating();
+            }
+        }
     }
 
     public void ResetWall()
@@ -140,10 +147,10 @@ public class GameManager : MonoBehaviour
         {
             var material = wall.GetComponent<MeshRenderer>().materials[0];
             material.SetColor("_EmissionColor", staticWall);
-            Vector3 initPosition = wall.GetComponent<OscillationManager>().basePosition;
-            wall.transform.position = initPosition;
+            OscillationManager oscillationManager = wall.GetComponent<OscillationManager>();
+            oscillationManager.StopOscillating();
         }
-        wallOnFire = wallOnMove = false;
+        wallOnFire = false;
     }
 
     public void HandleWallOnFire()
@@ -154,24 +161,6 @@ public class GameManager : MonoBehaviour
             material.SetColor("_EmissionColor", dynamicWall);
         }
         wallOnFire = true;
-    }
-
-    public void HandlePauseMenu()
-    {
-        if(!OnPause)
-        {
-            Time.timeScale = 0;
-            pauseMenu.SetActive(true);
-            OnPause = true;
-        } 
-        else
-        {
-            Time.timeScale = 1;
-            pauseMenu.SetActive(false);
-            leaderboardManager.leaderBoardUI.SetActive(false);
-            statBoard.SetActive(false);
-            OnPause = false;
-        } 
     }
 
     #region Gestion des sauvegardes
@@ -208,29 +197,6 @@ public class GameManager : MonoBehaviour
             Debug.Log("Donnee chargees, ton callsign est: " + dotroidPlayerName);
             #endif
         }
-    }
-
-    public void UpdateRanked()
-    {
-        leaderboardManager.GetPlayerRank(dotroidPlayerName);
-    }
-
-    public void OpenStatsBoard()
-    {
-        FetchStatBoardData();
-        statBoard.SetActive(true);
-    }
-
-    public void CloseStatBoard()
-    {
-        statBoard.SetActive(false);
-    }
-
-    public void FetchStatBoardData()
-    {
-        leaderboardManager.GetMyData();
-        statNumberOfRuns.text = runs.ToString();
-        statDotroidName.text = dotroidPlayerName;
     }
 
     public void ExitGame()
@@ -273,6 +239,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #region PauseMenu
+    public void HandlePauseMenu()
+    {
+        if(!OnPause)
+        {
+            Time.timeScale = 0;
+            pauseMenu.SetActive(true);
+            HandleStateSwitchControlButton();
+            OnPause = true;
+        } 
+        else
+        {
+            Time.timeScale = 1;
+            pauseMenu.SetActive(false);
+            leaderboardManager.leaderBoardUI.SetActive(false);
+            statBoard.SetActive(false);
+            OnPause = false;
+        } 
+    }
     public void OpenPlayerNameMenu()
     {
         AssignPlayerName();
@@ -306,6 +291,60 @@ public class GameManager : MonoBehaviour
     {
         confirmDeleteMenu.SetActive(false);
     }
+
+    public void UpdateRanked()
+    {
+        leaderboardManager.GetPlayerRank(dotroidPlayerName);
+    }
+
+    public void OpenStatsBoard()
+    {
+        FetchStatBoardData();
+        statBoard.SetActive(true);
+    }
+
+    public void CloseStatBoard()
+    {
+        statBoard.SetActive(false);
+    }
+
+    public void FetchStatBoardData()
+    {
+        leaderboardManager.GetMyData();
+        statNumberOfRuns.text = runs.ToString();
+        statDotroidName.text = dotroidPlayerName;
+    }
+
+    public void HandleSwitchControl()
+    {
+        if(leftControl.activeSelf)
+        {
+            rightControl.SetActive(true);
+            maskManager.joystick = rightControl.transform.GetChild(0).GetComponent<FixedJoystick>();
+            leftControl.SetActive(false);
+        }
+        else if(rightControl.activeSelf)
+        {
+            leftControl.SetActive(true);
+            maskManager.joystick = leftControl.transform.GetChild(0).GetComponent<FixedJoystick>();
+            rightControl.SetActive(false);
+        }
+    }
+    public void HandleStateSwitchControlButton()
+    {
+        if(leftControl.activeSelf)
+        {
+            switchLeft.SetActive(true);
+            switchRight.SetActive(false);
+        }
+        else if(rightControl.activeSelf)
+        {
+            switchRight.SetActive(true);
+            switchLeft.SetActive(false);
+        }
+    }
+
+    #endregion
 
     public async void DeleteUnityAccount()
     {

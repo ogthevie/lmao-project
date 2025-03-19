@@ -101,7 +101,7 @@ public class LeaderboardManager : MonoBehaviour
         int nbLines = leaderboardScoresPage.Results.Count + 1;
         if(leaderboardScoresPage.Results.Count > 7)
         {
-            int height = 52 + (nbLines * 52);
+            int height = 62 + (nbLines * 52);
             leaderBoardTableUI.sizeDelta = new Vector2 (0, height);
         } 
 

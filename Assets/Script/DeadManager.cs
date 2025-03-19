@@ -32,11 +32,9 @@ public class DeadManager : MonoBehaviour
         maskManager.dotroidThemeAudioSource.enabled = false;
 
         // Affiche le message de trash talk en fonction du temps écoulé
-        if(gameManager.timer < 20f)
-        {
-            int index = Random.Range(0,9);
-            trashTalkDead.text = texts[index];
-        }
+
+        int index = Random.Range(0,9);
+        trashTalkDead.text = texts[index];
     }
 
     // Méthode native appelée lorsque l'objet devient inactif, ne nécessite pas de réferencement

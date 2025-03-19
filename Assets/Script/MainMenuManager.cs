@@ -19,19 +19,15 @@ public class MainMenuManager : MonoBehaviour
     public void HandLeftGame()
     {
         gameManager.leftControl.SetActive(true);
-        Destroy(gameManager.leftButton);
-        Destroy(gameManager.rightControl);
-        Destroy(gameManager.rightButton);
-        StartCoroutine(gameManager.HandleTransition());
+        Destroy(gameManager.leftZone);
+        Destroy(gameManager.rightZone);
     }
 
     public void HandRightGame()
     {
         gameManager.rightControl.SetActive(true);
-        Destroy(gameManager.rightButton);
-        Destroy(gameManager.leftButton);
-        Destroy(gameManager.leftControl);
-        StartCoroutine(gameManager.HandleTransition());
+        Destroy(gameManager.rightZone);
+        Destroy(gameManager.leftZone);
     }
 
     #endregion
