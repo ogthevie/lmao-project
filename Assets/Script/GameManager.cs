@@ -55,6 +55,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         LoadGame();
+        if (!string.IsNullOrEmpty(dotroidPlayerName) && credentialsManager.unityLogin != null)
+        {   
+            credentialsManager.unityLogin.SetActive(false);
+            mainMenu.SetActive(true);
+        } 
         AddMazeChildrenToWalls();
     }
     void Update()
