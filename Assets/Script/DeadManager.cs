@@ -12,7 +12,7 @@ public class DeadManager : MonoBehaviour
     [SerializeField] string[] texts = new string[5];
 
     // Référence au composant TextMeshPro pour afficher le trash talk
-    [SerializeField] TextMeshProUGUI trashTalkDead;
+    [SerializeField] TextMeshProUGUI trashTalkDead, chronoScore;
     [SerializeField] EnemyManager[] enemyManagers = new EnemyManager[4];
 
     #endregion
@@ -30,6 +30,7 @@ public class DeadManager : MonoBehaviour
         // Désactive le comptage de score dans MaskManager
         maskManager.canCount = false;
         maskManager.dotroidThemeAudioSource.enabled = false;
+        chronoScore.text = Mathf.Ceil(gameManager.timer).ToString();
 
         // Affiche le message de trash talk en fonction du temps écoulé
 
