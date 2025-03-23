@@ -7,18 +7,23 @@ public class SkillManager : MonoBehaviour
 
     // Référence au Slider pour la compétence Thunder
     public Slider skillThunderSlider;
+    public Camera mainCamera;
 
     // Référence au GameObject button représentant le Thunder volant
-    public GameObject flyingThunder;
+    public GameObject flyingThunder, chain;
+    public Button horusButton;
     public Image spark;
 
     // Référence au système de particules pour l'effet visuel du Thunder volant
     [SerializeField] ParticleSystem flyThunderFx;
     [SerializeField] GameManager gameManager;
     [SerializeField] MaskManager maskManager;
+    [SerializeField] FXUIManager fXUIManager;
 
     // Variables pour gérer le temps de recharge de la compétence et les coordonnées du tonnerre volant
-    public float currentTime, maxTime, xPos, zPos;
+    public float currentTime, maxTime, xPos, zPos, horusTimer, baseSize = 0.4f, horusSize = 1f;
+    float velocity = 1f;
+    public bool isHorusActive;
 
     #endregion
 
@@ -27,6 +32,8 @@ public class SkillManager : MonoBehaviour
         skillThunderSlider = GetComponent<Slider>();
         maskManager = FindFirstObjectByType<MaskManager>();
         gameManager = FindFirstObjectByType<GameManager>();
+        mainCamera = FindFirstObjectByType<CameraManager>().GetComponent<Camera>();
+        fXUIManager = FindFirstObjectByType<FXUIManager>();
     }
     private void Start()
     {
@@ -38,6 +45,10 @@ public class SkillManager : MonoBehaviour
         flyingThunder.SetActive(false);
         spark.enabled = false;
         spark.enabled = false;
+        isHorusActive = false;
+        chain.SetActive(false);
+        horusButton.interactable = true;
+        horusTimer = 10f;
     }
 
     private void Update() 
@@ -46,6 +57,8 @@ public class SkillManager : MonoBehaviour
         
         float delta = Time.deltaTime;
         HandleTimerThunder(delta);
+        CloseHorusCapacity(delta);
+        horusInterpolation(delta);
     }
 
     // Gère le timer pour la compétence Thunder
@@ -79,5 +92,50 @@ public class SkillManager : MonoBehaviour
         skillThunderSlider.maxValue = maxTime;
         flyingThunder.SetActive(false);
         spark.enabled = false;
+    }
+
+    public void HorusCapacity()
+    {
+        isHorusActive = true;
+        horusButton.interactable = false;
+        chain.SetActive(true);
+        fXUIManager.HorusEnter();
+    }
+
+    public void CloseHorusCapacity(float delta)
+    {
+        if(!isHorusActive) return;
+
+        horusTimer -= 1*delta;
+
+        if(horusTimer <= 0)
+        {
+            isHorusActive = false;
+            fXUIManager.HorusExit();
+        } 
+    }
+
+    public void horusInterpolation(float delta)
+    {
+        float smoothTime = 0.25f; // Ajustez cette valeur selon vos besoins
+
+        if (isHorusActive && mainCamera.orthographicSize < 1f)
+        {
+            mainCamera.orthographicSize = Mathf.SmoothDamp(mainCamera.orthographicSize, horusSize, ref velocity, smoothTime);
+        }
+        else if (!isHorusActive && mainCamera.orthographicSize != 0.4f)
+        {
+            mainCamera.orthographicSize = Mathf.SmoothDamp(mainCamera.orthographicSize, baseSize, ref velocity, smoothTime);
+        }
+    }
+
+    public void ResetHorusCapacity()
+    {
+        isHorusActive = false;
+        mainCamera.orthographicSize = 0.4f;
+        horusTimer = 10f;
+        horusButton.interactable = true;
+        chain.SetActive(false);
+        fXUIManager.horusFx.SetActive(false);
     }
 }

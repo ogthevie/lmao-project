@@ -1,7 +1,6 @@
 using UnityEngine;
 using Unity.Services.Leaderboards;
 using TMPro;
-using Unity.Services.Core;
 using Unity.Services.Leaderboards.Models;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -101,7 +100,7 @@ public class LeaderboardManager : MonoBehaviour
         int nbLines = leaderboardScoresPage.Results.Count + 1;
         if(leaderboardScoresPage.Results.Count > 7)
         {
-            int height = 62 + (nbLines * 52);
+            int height = 62 + ((nbLines+1) * 52);
             leaderBoardTableUI.sizeDelta = new Vector2 (0, height);
         } 
 

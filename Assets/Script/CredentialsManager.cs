@@ -27,6 +27,7 @@ public class CredentialsManager : MonoBehaviour
             #endif
 
             Destroy(unityLogin);
+            mainMenu.SetActive(true);
             return;
         }
 
@@ -35,6 +36,7 @@ public class CredentialsManager : MonoBehaviour
             await AuthenticationService.Instance.SignInWithUnityAsync(PlayerAccountService.Instance.AccessToken);
 
             Destroy(unityLogin);
+            mainMenu.SetActive(true);
             #if UNITY_EDITOR
             Debug.Log("Connexion réussie avec Unity.");
             #endif

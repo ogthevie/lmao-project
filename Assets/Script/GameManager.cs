@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     MaskManager maskManager;
     public LeaderboardManager leaderboardManager;
     public CredentialsManager credentialsManager;
+    [SerializeField] FXUIManager fXUIManager;
     public AudioSource gameAudioSource;
 
     // Références aux éléments UI pour afficher le chronomètre et le score
@@ -50,6 +51,7 @@ public class GameManager : MonoBehaviour
         gameAudioSource = GetComponent<AudioSource>();
         maskManager = FindFirstObjectByType<MaskManager>();
         leaderboardManager = FindFirstObjectByType<LeaderboardManager>();
+        fXUIManager = FindFirstObjectByType<FXUIManager>();
         //ClearAllSaves();
     }
     void Start()
@@ -81,7 +83,7 @@ public class GameManager : MonoBehaviour
             chronoVisual.text = Mathf.Ceil(timer).ToString();
 
 
-            if(score >= 50f) 
+            if(score >= 50f && !gameAudioSource.loop) 
             {
                 phase.SetActive(true);
                 WallMoveTheme();
@@ -111,7 +113,7 @@ public class GameManager : MonoBehaviour
     public void HandleLetsPlay()
     {
         StartCoroutine(HandleTransition());
-        maskManager.joystick = FindFirstObjectByType<FixedJoystick>();
+        maskManager.joystick = FindFirstObjectByType<FloatingJoystick>();
     }
 
 
@@ -324,14 +326,35 @@ public class GameManager : MonoBehaviour
     {
         if(leftControl.activeSelf)
         {
+            SkillManager skillManagerleft = FindFirstObjectByType<SkillManager>();
+            if(skillManagerleft.isHorusActive)
+            {
+                skillManagerleft.isHorusActive = false;
+                skillManagerleft.mainCamera.orthographicSize = 0.4f;
+                skillManagerleft.horusButton.interactable = false;
+                skillManagerleft.chain.SetActive(true);
+                fXUIManager.HorusExit();
+            }
+
             rightControl.SetActive(true);
-            maskManager.joystick = rightControl.transform.GetChild(0).GetComponent<FixedJoystick>();
+            maskManager.joystick = rightControl.transform.GetChild(0).GetComponent<FloatingJoystick>();
             leftControl.SetActive(false);
+            
         }
         else if(rightControl.activeSelf)
         {
+            SkillManager skillManagerRight = FindFirstObjectByType<SkillManager>();
+            if(skillManagerRight.isHorusActive)
+            {
+                skillManagerRight.isHorusActive = false;
+                skillManagerRight.mainCamera.orthographicSize = 0.4f;
+                skillManagerRight.horusButton.interactable = false;
+                skillManagerRight.chain.SetActive(true);
+                fXUIManager.HorusExit();
+            }
+
             leftControl.SetActive(true);
-            maskManager.joystick = leftControl.transform.GetChild(0).GetComponent<FixedJoystick>();
+            maskManager.joystick = leftControl.transform.GetChild(0).GetComponent<FloatingJoystick>();
             rightControl.SetActive(false);
         }
     }

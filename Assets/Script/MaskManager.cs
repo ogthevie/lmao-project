@@ -14,7 +14,7 @@ public class MaskManager : MonoBehaviour
     [SerializeField] GameManager gameManager;
 
     // Référence au joystick pour les entrées du joueur
-    public FixedJoystick joystick;
+    public FloatingJoystick joystick;
 
     // Indicateurs pour contrôler l'activation du compteur de score et l'état de mort
     public bool canCount, isdead;
@@ -49,8 +49,7 @@ public class MaskManager : MonoBehaviour
     {
         if(!gameManager.canPlay) return;
         
-        /*if(gameManager.isControllerConnected)AnalogJoystickWalk();
-        else*/ VirtualJoystickWalk();
+        VirtualJoystickWalk();
     }
 
     void DeadProtocolCollisionLayer()
@@ -81,14 +80,6 @@ public class MaskManager : MonoBehaviour
     {
         Vector3 movement = new Vector3(joystick.Horizontal, 0f, joystick.Vertical) * moveSpeed;
         rb.MovePosition(rb.position + movement * Time.fixedDeltaTime);
-    }
-
-    void AnalogJoystickWalk()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(horizontal, 0f, vertical) * moveSpeed;
-        rb.MovePosition(rb.position + movement * Time.fixedDeltaTime);        
     }
 
     //Gestion de l'apparition sur les différentes positions

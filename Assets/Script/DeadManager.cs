@@ -69,6 +69,7 @@ public class DeadManager : MonoBehaviour
             skillManager.skillThunderSlider.maxValue = skillManager.maxTime = 15f;
             skillManager.flyingThunder.SetActive(false);
             skillManager.spark.enabled = false;
+            skillManager.ResetHorusCapacity();
             Time.timeScale = 1;
             GameObject mask = maskManager.transform.GetChild(0).gameObject;
             gameManager.ResetWall();
