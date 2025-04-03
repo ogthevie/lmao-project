@@ -64,7 +64,7 @@ public class SkillManager : MonoBehaviour
     // Gère le timer pour la compétence Thunder
     void HandleTimerThunder(float delta)
     {
-        if(maskManager.isdead) return;
+        if(maskManager.isdead || spark.enabled) return;
 
         if(currentTime < maxTime)
         {
@@ -75,17 +75,42 @@ public class SkillManager : MonoBehaviour
         {
             flyingThunder.SetActive(true);
             spark.enabled = true;
-            xPos = Random.Range(-3.49f, 3.49f);
-            zPos = Random.Range(-3.49f, 3.49f);
+        }
+    }
+
+    public void FlyPosition(float minVal, float maxVal)
+    {
+        float playerX = maskManager.transform.position.x;
+        float playerZ = maskManager.transform.position.z;
+
+        if(playerX >= 0 && playerZ >= 0)
+        {
+            xPos = Random.Range(minVal, 0);
+            zPos = Random.Range(minVal, 0);
+        }
+        else if(playerX < 0 && playerZ >= 0)
+        {
+            xPos = Random.Range(0, maxVal);
+            zPos = Random.Range(minVal, 0);
+        }
+        else if(playerX < 0 && playerZ < 0)
+        {
+            xPos = Random.Range(0, maxVal);
+            zPos = Random.Range(0, maxVal);
+        }
+        else
+        {
+            xPos = Random.Range(minVal, 0);
+            zPos = Random.Range(0, maxVal);
         }
     }
 
     //Logique de la compétence du Thunder volant
     public void HandleFlyingThunder()
-    { 
+    {
+        FlyPosition(-3.49f, 3.49f);
         maskManager.transform.position = new Vector3(xPos, maskManager.transform.position.y, zPos);
         gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[7]);
-        xPos = zPos = 0f;
         currentTime = 0f;
         flyThunderFx.Play();
         maxTime += 10f;

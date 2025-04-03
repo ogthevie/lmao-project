@@ -21,20 +21,18 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline, statDotroidName, statNumberOfRuns, statBestScore, nameErrorText;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftZone, rightZone, switchLeft, switchRight, leftControl, rightControl, pauseMenu, maze, statBoard, settingsMenu, confirmDeleteMenu, updateNameMenu, phase;
+    public GameObject mainMenu, transitionScreen, leftZone, rightZone, switchLeft, switchRight, leftControl, rightControl, pauseMenu, statBoard, settingsMenu, confirmDeleteMenu, updateNameMenu, phase;
     [SerializeField] Button lbutton, rbutton;
 
     // Tableau des clips audio utilisés dans le jeu
     public AudioClip [] audioClips = new AudioClip[3];
-    [SerializeField] List <GameObject> walls = new List<GameObject>();
 
     // Variables pour le score et le score prime
     public int score, primeScore, runs;
     // Timer pour suivre le temps écoulé
     public float timer;
     // Indicateur pour savoir si le jeu peut être joué
-    public bool canPlay, OnPause, wallOnFire, wallOnMove;
-    [SerializeField] Color dynamicWall = new Color(0.90f, 0.09f, 0.05f);
+    public bool canPlay, OnPause;
     [SerializeField] Color staticWall = new Color(0.04f, 0.1f, 0.30f);
     public string dotroidPlayerName;
 
@@ -62,7 +60,6 @@ public class GameManager : MonoBehaviour
             credentialsManager.unityLogin.SetActive(false);
             mainMenu.SetActive(true);
         } 
-        AddMazeChildrenToWalls();
     }
     void Update()
     {
@@ -81,32 +78,6 @@ public class GameManager : MonoBehaviour
             score = (int)timer;
             if(primeScore < score) primeScore = score;
             chronoVisual.text = Mathf.Ceil(timer).ToString();
-
-
-            if(score >= 50f && !gameAudioSource.loop) 
-            {
-                phase.SetActive(true);
-                WallMoveTheme();
-            }
-            if(!wallOnFire && score >= 200f) HandleWallOnFire();
-
-        }
-    }
-
-    void AddMazeChildrenToWalls()
-    {
-        if (maze != null)
-        {
-            bool isFirstChild = true;
-            foreach (Transform child in maze.transform)
-            {
-                if (isFirstChild)
-                {
-                    isFirstChild = false;
-                    continue;
-                }
-                walls.Add(child.gameObject);
-            }
         }
     }
 
@@ -133,42 +104,6 @@ public class GameManager : MonoBehaviour
         UpdateRanked();
     }
 
-    public void WallMoveTheme()
-    {
-        gameAudioSource.Play();
-        gameAudioSource.loop = true;
-        // Activer les oscillations pour tous les murs
-        foreach (GameObject wall in walls)
-        {
-            var oscillationManager = wall.GetComponent<OscillationManager>();
-            if (oscillationManager != null)
-            {
-                oscillationManager.StartOscillating();
-            }
-        }
-    }
-
-    public void ResetWall()
-    {
-        foreach (GameObject wall in walls)
-        {
-            var material = wall.GetComponent<MeshRenderer>().materials[0];
-            material.SetColor("_EmissionColor", staticWall);
-            OscillationManager oscillationManager = wall.GetComponent<OscillationManager>();
-            oscillationManager.StopOscillating();
-        }
-        wallOnFire = false;
-    }
-
-    public void HandleWallOnFire()
-    {
-        foreach (GameObject wall in walls)
-        {
-            var material = wall.GetComponent<MeshRenderer>().materials[0];
-            material.SetColor("_EmissionColor", dynamicWall);
-        }
-        wallOnFire = true;
-    }
 
     #region Gestion des sauvegardes
 

@@ -7,13 +7,14 @@ public class DeadManager : MonoBehaviour
     GameManager gameManager;
     [SerializeField] MaskManager maskManager;
     [SerializeField] SkillManager skillManager;
+    [SerializeField] FirstStageManager firstStageManager;
 
     // Textes pour les messages de trash talk
     [SerializeField] string[] texts = new string[5];
 
     // Référence au composant TextMeshPro pour afficher le trash talk
     [SerializeField] TextMeshProUGUI trashTalkDead, chronoScore;
-    [SerializeField] EnemyManager[] enemyManagers = new EnemyManager[4];
+    [SerializeField] EnemyManager[] enemyManagers = new EnemyManager[6];
 
     #endregion
     
@@ -29,8 +30,9 @@ public class DeadManager : MonoBehaviour
 
         // Désactive le comptage de score dans MaskManager
         maskManager.canCount = false;
-        maskManager.dotroidThemeAudioSource.enabled = false;
+        maskManager.dotroidThemeAudioSource.Stop();
         chronoScore.text = Mathf.Ceil(gameManager.timer).ToString();
+        firstStageManager.stageAudiosource.Stop();
 
         // Affiche le message de trash talk en fonction du temps écoulé
 
@@ -43,7 +45,7 @@ public class DeadManager : MonoBehaviour
     {
         // Reactive le comptage de score dans MaskManager
         maskManager.canCount = true;
-        maskManager.dotroidThemeAudioSource.enabled = true;
+        maskManager.dotroidThemeAudioSource.Play();
     }
 
     void Start()
@@ -60,20 +62,24 @@ public class DeadManager : MonoBehaviour
                 var.iconHunter.SetActive(false);
                 var.agent.speed = 0.2f;
             }
-            gameManager.gameAudioSource.loop = false;
             gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[3]);
+
             maskManager.HandleStartGamePosition();
             maskManager.isdead = false;
             gameManager.timer = 0;
             gameManager.chronoVisual.text = "0";
+
             skillManager.currentTime = 0f;
             skillManager.skillThunderSlider.maxValue = skillManager.maxTime = 15f;
             skillManager.flyingThunder.SetActive(false);
             skillManager.spark.enabled = false;
             skillManager.ResetHorusCapacity();
+
             Time.timeScale = 1;
             GameObject mask = maskManager.transform.GetChild(0).gameObject;
-            gameManager.ResetWall();
+
+            firstStageManager.ResetWall();
+
             mask.SetActive(true);
             gameManager.LoadGame();
             gameManager.UpdateRanked();

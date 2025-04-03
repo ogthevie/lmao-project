@@ -31,7 +31,6 @@ public class EnemyManager : MonoBehaviour
     {
         gameManager = FindFirstObjectByType<GameManager>();
         maskManager = FindFirstObjectByType<MaskManager>();
-        basePosition = transform.position;
         target = FindFirstObjectByType<MaskManager>().GetComponent<Transform>();
         iconHunter.SetActive(false);
         agent = GetComponent<NavMeshAgent>();
@@ -40,7 +39,7 @@ public class EnemyManager : MonoBehaviour
     void Update()
     {
         // Calcule la distance entre l'ennemi et la cible
-        distanceTarget = Vector3.Distance(this.transform.position, target.transform.position);
+        if(target != null) distanceTarget = Vector3.Distance(this.transform.position, target.transform.position);
         
         if(!maskManager.isdead && gameManager.canPlay)
         {
@@ -56,7 +55,7 @@ public class EnemyManager : MonoBehaviour
     // Vérifie la distance entre l'ennemi et la cible pour activer l'icône du chasseur
     void CheckDistance()
     {
-        if(gameManager.timer >= timerActiveself || distanceTarget < 0.65f)
+        if(gameManager.timer >= timerActiveself || distanceTarget < 0.7f)
         {
             gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[6]);
             iconHunter.SetActive(true);
@@ -105,9 +104,6 @@ public class EnemyManager : MonoBehaviour
             // Affiche l'interface utilisateur de mort
             deadUI.SetActive(true);
 
-            // Arrête et joue un son de mort
-            gameManager.gameAudioSource.Stop();
-            gameManager.gameAudioSource.loop = false;
             gameManager.gameAudioSource.PlayOneShot(gameManager.audioClips[2]);
             gameManager.runs += 1;
             

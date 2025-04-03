@@ -24,6 +24,7 @@ public class MaskManager : MonoBehaviour
 
     // Référence au GameObject pour l'effet de traînée
     public AudioSource dotroidThemeAudioSource;
+    public StageManager stageManager;
 
     #endregion
 
@@ -39,7 +40,7 @@ public class MaskManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) 
     {
-        if(other.gameObject.layer == 6 && gameManager.wallOnFire) DeadProtocolCollisionLayer();
+        if(other.gameObject.layer == 6 && stageManager.wallOnFire) DeadProtocolCollisionLayer();
         else if(other.gameObject.layer == 9) DeadProtocolCollisionLayer();
     
     }
