@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI chronoVisual, primeScoreVisual, rankOnline, statDotroidName, statNumberOfRuns, statBestScore, nameErrorText;
 
     // Références aux différents éléments UI
-    public GameObject mainMenu, transitionScreen, leftZone, rightZone, switchLeft, switchRight, leftControl, rightControl, pauseMenu, statBoard, settingsMenu, confirmDeleteMenu, updateNameMenu, phase;
+    public GameObject mainMenu, transitionScreen, leftZone, rightZone, switchLeft, switchRight, leftControl, rightControl, pauseGame, statBoard, settingsMenu, confirmDeleteMenu, updateNameMenu, phase, online, offline, blockLeaderBoard, blockProfileSettings, profileUIText, onlineUIText;
     [SerializeField] Button lbutton, rbutton;
 
     // Tableau des clips audio utilisés dans le jeu
@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
     public float timer;
     // Indicateur pour savoir si le jeu peut être joué
     public bool canPlay, OnPause;
-    [SerializeField] Color staticWall = new Color(0.04f, 0.1f, 0.30f);
     public string dotroidPlayerName;
 
     #endregion
@@ -182,19 +181,40 @@ public class GameManager : MonoBehaviour
     }
 
     #region PauseMenu
+
+    public void ToggleOnlineMode()
+    {
+        online.SetActive(true);
+        blockLeaderBoard.SetActive(false);
+        blockProfileSettings.SetActive(false);
+        profileUIText.SetActive(true);
+        onlineUIText.SetActive(true);
+        offline.SetActive(false);
+    }
+
+    public void ToggleOfflineMode()
+    {
+        offline.SetActive(true);
+        blockLeaderBoard.SetActive(true);
+        blockProfileSettings.SetActive(true);
+        profileUIText.SetActive(false);
+        onlineUIText.SetActive(false);
+        online.SetActive(false);
+    }
+
     public void HandlePauseMenu()
     {
         if(!OnPause)
         {
             Time.timeScale = 0;
-            pauseMenu.SetActive(true);
+            pauseGame.SetActive(true);
             HandleStateSwitchControlButton();
             OnPause = true;
         } 
         else
         {
             Time.timeScale = 1;
-            pauseMenu.SetActive(false);
+            pauseGame.SetActive(false);
             leaderboardManager.leaderBoardUI.SetActive(false);
             statBoard.SetActive(false);
             OnPause = false;
@@ -318,6 +338,7 @@ public class GameManager : MonoBehaviour
         ExitGame();
     }
 
+    #region SFX buttons
     public void playOpenSound()
     {
         gameAudioSource.PlayOneShot(audioClips[4]);
@@ -327,6 +348,12 @@ public class GameManager : MonoBehaviour
     {
         gameAudioSource.PlayOneShot(audioClips[5]);
     }
+
+    public void CancelSound()
+    {
+        gameAudioSource.PlayOneShot(audioClips[8]);
+    }
+    #endregion
 
     async void AssignPlayerName()
     {

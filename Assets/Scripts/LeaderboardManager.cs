@@ -26,10 +26,12 @@ public class LeaderboardManager : MonoBehaviour
         {
             var playerScore = await LeaderboardsService.Instance.AddPlayerScoreAsync(gameManager.leaderboardID, score);
             Debug.Log("Score added to leaderboard successfully. " + JsonConvert.SerializeObject(playerScore));
+            gameManager.ToggleOnlineMode();
         }
         catch (System.Exception e)
         {
             Debug.LogError("Erreur lors de l'ajout du score au tableau de classement : " + e.Message);
+            gameManager.ToggleOfflineMode();
         }
     }
 
@@ -44,12 +46,14 @@ public class LeaderboardManager : MonoBehaviour
                 gameManager.rankOnline.text = temprank.ToString();
                 gameManager.primeScore = (int)playerScore.Score;
                 gameManager.primeScoreVisual.text = playerScore.Score.ToString();
+                gameManager.ToggleOnlineMode();
             }
 
         }
         catch (System.Exception e)
         {
             Debug.LogError("Erreur lors de la récupération du rang du joueur : " + e.Message);
+            gameManager.ToggleOfflineMode();
         }
     }
 
@@ -64,7 +68,8 @@ public class LeaderboardManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogError("Erreur lors de la sauvegarde du joueur : " + e.Message);            
+            Debug.LogError("Erreur lors de la sauvegarde du joueur : " + e.Message);
+            gameManager.ToggleOfflineMode();          
         }
     }
 
